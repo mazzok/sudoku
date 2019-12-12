@@ -90,8 +90,8 @@ public class Sudoku {
                     continue;
                 } else {
                     if (trySolvingFields(Arrays.stream(f.getBlock().getFields()).flatMap(s -> Stream.of(s)).toArray(SudokuField[]::new)) == Boolean.TRUE
-                     || trySolvingFields(row) == Boolean.TRUE
-                     || trySolvingFields(column) == Boolean.TRUE) {
+                            || trySolvingFields(row) == Boolean.TRUE
+                            || trySolvingFields(column) == Boolean.TRUE) {
                         continue;
                     }
                 }
