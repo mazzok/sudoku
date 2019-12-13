@@ -62,6 +62,8 @@ public class main {
 
         System.out.println(s.toString());
 
+        s.printSolutionTrail();
+
 //        System.out.println(s.i);
 //        System.out.println("Solving took "+(l1-l)/1000d+" seconds");
 

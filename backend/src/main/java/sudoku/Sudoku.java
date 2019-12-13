@@ -1,19 +1,23 @@
 package sudoku;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Sudoku {
 
 
-    private final int yBlockDim;
-    private final int xBlockDim;
-    private SudokuBlock[][] blocks;
-    private int xBlocks;
-    private int yBlocks;
+    protected final int yBlockDim;
+    protected final int xBlockDim;
+    protected SudokuBlock[][] blocks;
+    protected int xBlocks;
+    protected int yBlocks;
+    private List<SudokuSnapshot> snapshots;
 
     public Sudoku() {
+        this.snapshots = new ArrayList<>();
         this.xBlocks = 3;
         this.yBlocks = 3;
 
@@ -23,9 +27,13 @@ public class Sudoku {
         this.blocks = new SudokuBlock[this.yBlockDim][this.xBlocks];
         for(int y = 0; y < yBlocks; y++) {
             for (int x = 0; x < xBlocks; x++) {
-                this.blocks[y][x] = new SudokuBlock(x,y,this.xBlockDim,this.yBlockDim);
+                this.blocks[y][x] = createField(y, x);
             }
         }
+    }
+
+    protected SudokuBlock createField(int y, int x) {
+        return new SudokuBlock(this,x,y,this.xBlockDim,this.yBlockDim);
     }
 
     public void addField(int x, int y, int value) {
@@ -89,9 +97,9 @@ public class Sudoku {
                     f.setValue(f.getPossibleValues().get(0), row, column);
                     continue;
                 } else {
-                    if (trySolvingFields(Arrays.stream(f.getBlock().getFields()).flatMap(s -> Stream.of(s)).toArray(SudokuField[]::new)) == Boolean.TRUE
-                            || trySolvingFields(row) == Boolean.TRUE
-                            || trySolvingFields(column) == Boolean.TRUE) {
+                    if (trySolvingFields(Arrays.stream(f.getBlock().getFields()).flatMap(s -> Stream.of(s)).toArray(SudokuField[]::new),"block") == Boolean.TRUE
+                            || trySolvingFields(row,"row") == Boolean.TRUE
+                            || trySolvingFields(column,"column") == Boolean.TRUE) {
                         continue;
                     }
                 }
@@ -113,7 +121,7 @@ public class Sudoku {
     }
 
 
-    private boolean trySolvingFields(SudokuField [] sudokuFieldArray) {
+    private boolean trySolvingFields(SudokuField [] sudokuFieldArray, String type) {
 
         Map<String, List<SudokuField>> samePossibleValuesMap = Arrays.stream(sudokuFieldArray)
                 .filter(s -> s.getPossibleValues().size() > 0)
@@ -136,6 +144,14 @@ public class Sudoku {
 
             while(it.hasNext()) {
                 Map.Entry<String, List<SudokuField>> entry = it.next();
+
+                String message = String.format("There are %n field within the same %s, which can only contain one of the values [%s]." +
+                                " Therefore these values are removed from all other fields of the same %s",
+                        entry.getValue().size(),
+                        type,
+                        Arrays.asList(entry.getKey().split(",")),
+                        type);
+
                 //remove those entries from all other elements the given array
                 List<SudokuField> otherSudokuFields = new LinkedList<>(Arrays.asList(sudokuFieldArray));
                 otherSudokuFields.removeAll(entry.getValue());
@@ -146,14 +162,25 @@ public class Sudoku {
                         .collect(Collectors.toList());
                 otherSudokuFields.forEach(s -> s.getPossibleValues().removeAll(valuesToRemove));
 
+                this.logSolutionTrailStep(message, entry.getValue(), otherSudokuFields);
+
+
                 if (areFieldsInSameRow(entry.getValue())) {
                     List<SudokuField> row = new LinkedList<>(Arrays.asList(getRow(getRowIndex(entry.getValue().get(0)))));
                     row.removeAll(entry.getValue());
                     row.forEach(s -> s.getPossibleValues().removeAll(valuesToRemove));
+
+                    this.logSolutionTrailStep(String.format("These fields are additionally in the same row, therefore values [%s] are removed from there aswell"
+                            ,Arrays.asList(entry.getKey().split(","))), entry.getValue(), row);
+
                 } else if (areFieldsInSameColumn(entry.getValue())) {
                     List<SudokuField> column = new LinkedList<>(Arrays.asList(getColumn(getColIndex(entry.getValue().get(0)))));
                     column.removeAll(entry.getValue());
                     column.forEach(s -> s.getPossibleValues().removeAll(valuesToRemove));
+
+                    this.logSolutionTrailStep(String.format("These fields are additionally in the same column, therefore values [%s] are removed from there aswell"
+                            ,Arrays.asList(entry.getKey().split(","))), entry.getValue(), column);
+
                 }
             }
             return true;
@@ -293,4 +320,27 @@ public class Sudoku {
 
     }
 
+    public void logSolutionTrailStep(String message, List<SudokuField> actors, List<SudokuField> reactors) {
+
+        SudokuSnapshot snapshot = new SudokuSnapshot(message,
+                actors.stream().map(s -> SudokuSnapshotField.asActor(s) ).collect(Collectors.toList()),
+                reactors.stream().map(s -> SudokuSnapshotField.asReactor(s) ).collect(Collectors.toList()),
+                this);
+
+
+
+
+        this.snapshots.add(snapshot);
+    }
+
+    public void printSolutionTrail() {
+        for (int i = 0; i < this.snapshots.size();i++) {
+            SudokuSnapshot s = this.snapshots.get(i);
+            System.out.println(String.format("----------(STEP %n .)-------------",i));
+
+            System.out.println(s.getMessage());
+            System.out.println(s.toString());
+
+        }
+    }
 }

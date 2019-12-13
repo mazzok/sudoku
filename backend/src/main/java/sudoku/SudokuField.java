@@ -2,6 +2,7 @@ package sudoku;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -10,14 +11,14 @@ import java.util.stream.StreamSupport;
 
 public class SudokuField {
 
-    private SudokuBlock block;
-    private Integer value;
+    protected SudokuBlock block;
+    protected Integer value;
 
-    private List<Integer> possibleValues = new ArrayList<>();
-    private int x;
-    private int y;
+    protected List<Integer> possibleValues = new ArrayList<>();
+    protected int x;
+    protected int y;
 
-    private SudokuField() {
+    protected SudokuField() {
         super();
     }
 
@@ -40,7 +41,6 @@ public class SudokuField {
         this.block = block;
         this.x = x;
         this.y = y;
-        this.block = this.block;
         initPossibleValues();
 
     }
@@ -79,11 +79,17 @@ public class SudokuField {
     public void setValue(Integer value, SudokuField[] row, SudokuField[] column) {
         this.value = value;
         System.out.println("Setting Value to "+value);
-        Stream.concat( Stream.of(this.block.getFields()).flatMap(s -> Stream.of(s)) ,
+        List<SudokuField> reactors = Stream.concat( Stream.of(this.block.getFields()).flatMap(s -> Stream.of(s)) ,
                 Stream.concat(Arrays.stream(row),Arrays.stream(column)))
-                .distinct()
-                .forEach(sf -> sf.getPossibleValues().remove(value));
+                .distinct().collect(Collectors.toList());
+
+        reactors.forEach(sf -> sf.getPossibleValues().remove(value));
+        this.getBlock().getSudoku().logSolutionTrailStep(String.format("Setting Field  %s Value to %s, removing the valu from columns and rows", this, value), Collections.singletonList(this), reactors );
 
         this.getPossibleValues().clear();
+    }
+
+    public boolean equalsCoordinates(int blockY, int blockX, int fieldY, int fieldX) {
+        return blockY == block.y && blockX == block.x && fieldY == y && fieldX == x;
     }
 }

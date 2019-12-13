@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>sudoku</groupId>
+  <artifactId>frontend</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>war</packaging>
+
+  <name>frontend Maven Webapp</name>
+  <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+
+    <skipKarmaTests>${maven.test.skip}</skipKarmaTests>
+    <skipProtractorTests>true</skipProtractorTests>
+    <src.dir.angular>src/main/angular</src.dir.angular>
+
+    <!-- SonarTsPlugin Configuration -->
+    <sonar.sources>${src.dir.angular}/src/app</sonar.sources>
+    <sonar.exclusions>**/node_modules/**,**/*.spec.ts</sonar.exclusions>
+    <sonar.tests>${src.dir.angular}/src/app</sonar.tests>
+    <sonar.test.inclusions>**/*.spec.ts</sonar.test.inclusions>
+    <sonar.typescript.lcov.reportPaths>${project.build.directory}/coverage/lcov.info</sonar.typescript.lcov.reportPaths>
+    <version.maven-replacer-plugin>1.5.3</version.maven-replacer-plugin>
+    <version.frontend-maven-plugin>1.8.0</version.frontend-maven-plugin>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>${project.artifactId}</finalName>
+    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+      <plugins>
+        <plugin>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+        <!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_war_packaging -->
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.0.2</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.8.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.2.2</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+  <profiles>
+    <profile>
+      <id>build-npm</id>
+      <activation>
+        <file>
+          <exists>${src.dir.angular}</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-clean-plugin</artifactId>
+            <configuration>
+              <filesets>
+                <fileset>
+                  <directory>${src.dir.angular}/node_modules</directory>
+                  <followSymlinks>false</followSymlinks>
+                </fileset>
+              </filesets>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <version>${version.frontend-maven-plugin}</version>
+            <configuration>
+              <workingDirectory>${src.dir.angular}</workingDirectory>
+              <installDirectory>${project.parent.build.directory}</installDirectory>
+            </configuration>
+            <executions>
+              <!-- execute command "npm install" inside workingDirectory -->
+              <execution>
+                <id>npm install</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <installDirectory>${project.parent.build.directory}</installDirectory>
+                  <arguments>install --no-optional</arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>karma tests</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <phase>test</phase>
+                <configuration>
+                  <skip>${skipKarmaTests}</skip>
+                  <installDirectory>${project.parent.build.directory}</installDirectory>
+                  <arguments>run test</arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>protractor tests</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <phase>integration-test</phase>
+                <configuration>
+                  <skip>${skipProtractorTests}</skip>
+                  <installDirectory>${project.parent.build.directory}</installDirectory>
+                  <arguments>run e2e</arguments>
+                </configuration>
+              </execution>
+              <!-- execute command "npm build" inside workingDirectory to clean and create "/dist" directory -->
+              <execution>
+                <id>npm build</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <installDirectory>${project.parent.build.directory}</installDirectory>
+                  <arguments>run build</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- Plugin to copy the content of /angular/dist/ directory to output directory -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-copy-resources</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <overwrite>true</overwrite>
+                  <outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${project.build.directory}/generated-resources/dist</directory>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <!-- set project version in package.json -->
+          <plugin>
+            <groupId>com.google.code.maven-replacer-plugin</groupId>
+            <artifactId>replacer</artifactId>
+            <version>${version.maven-replacer-plugin}</version>
+            <executions>
+              <execution>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>replace</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <file>${project.basedir}/${src.dir.angular}/package.json</file>
+              <replacements>
+                <replacement>
+                  <token>"version": "(.*)",</token>
+                  <value>"version": "${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}",</value>
+                </replacement>
+              </replacements>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
