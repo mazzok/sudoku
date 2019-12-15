@@ -9,16 +9,12 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <name>frontend Maven Webapp</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
 
-    <skipKarmaTests>${maven.test.skip}</skipKarmaTests>
+<!--    <skipKarmaTests>${maven.test.skip}</skipKarmaTests>-->
     <skipProtractorTests>true</skipProtractorTests>
     <src.dir.angular>src/main/angular</src.dir.angular>
 
@@ -30,6 +26,8 @@
     <sonar.typescript.lcov.reportPaths>${project.build.directory}/coverage/lcov.info</sonar.typescript.lcov.reportPaths>
     <version.maven-replacer-plugin>1.5.3</version.maven-replacer-plugin>
     <version.frontend-maven-plugin>1.8.0</version.frontend-maven-plugin>
+    <version.jparsedVersion.majorVersionmeter-maven-plugin>3.0.0</version.jparsedVersion.majorVersionmeter-maven-plugin>
+    <project.parent.build.directory1>C:\Program Files\nodejs</project.parent.build.directory1>
   </properties>
 
   <dependencies>
@@ -77,6 +75,25 @@
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+              <execution>
+                <phase>validate</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <echo>[${project.build.directory}/${project.build.finalName}] ${project.parent.build.directory}</echo>
+                  </tasks>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-clean-plugin</artifactId>
             <configuration>
               <filesets>
@@ -93,9 +110,24 @@
             <version>${version.frontend-maven-plugin}</version>
             <configuration>
               <workingDirectory>${src.dir.angular}</workingDirectory>
-              <installDirectory>${project.parent.build.directory}</installDirectory>
+              <installDirectory>${project.parent.build.directory1}</installDirectory>
+              <nodeVersion>v4.6.0</nodeVersion>
+              <!-- optional: with node version greater than 4.0.0 will use npm provided by node distribution -->
+              <npmVersion>2.15.9</npmVersion>
+              <!-- optional: where to download node and npm from. Defaults to https://nodejs.org/dist/ -->
+              <downloadRoot>http://nodejs.org/dist</downloadRoot>
             </configuration>
+
             <executions>
+<!--              <execution>-->
+<!--                &lt;!&ndash; optional: you don't really need execution ids, but it looks nice in your build log. &ndash;&gt;-->
+<!--                <id>install node and npm</id>-->
+<!--                <goals>-->
+<!--                  <goal>install-node-and-npm</goal>-->
+<!--                </goals>-->
+<!--                &lt;!&ndash; optional: default phase is "generate-resources" &ndash;&gt;-->
+<!--                <phase>generate-resources</phase>-->
+<!--              </execution>-->
               <!-- execute command "npm install" inside workingDirectory -->
               <execution>
                 <id>npm install</id>
@@ -103,34 +135,35 @@
                   <goal>npm</goal>
                 </goals>
                 <configuration>
-                  <installDirectory>${project.parent.build.directory}</installDirectory>
-                  <arguments>install --no-optional</arguments>
+                  <workingDirectory>${src.dir.angular}</workingDirectory>
+                  <installDirectory>${project.parent.build.directory1}</installDirectory>
+                  <arguments>install</arguments>
                 </configuration>
               </execution>
-              <execution>
-                <id>karma tests</id>
-                <goals>
-                  <goal>npm</goal>
-                </goals>
-                <phase>test</phase>
-                <configuration>
-                  <skip>${skipKarmaTests}</skip>
-                  <installDirectory>${project.parent.build.directory}</installDirectory>
-                  <arguments>run test</arguments>
-                </configuration>
-              </execution>
-              <execution>
-                <id>protractor tests</id>
-                <goals>
-                  <goal>npm</goal>
-                </goals>
-                <phase>integration-test</phase>
-                <configuration>
-                  <skip>${skipProtractorTests}</skip>
-                  <installDirectory>${project.parent.build.directory}</installDirectory>
-                  <arguments>run e2e</arguments>
-                </configuration>
-              </execution>
+<!--              <execution>-->
+<!--                <id>karma tests</id>-->
+<!--                <goals>-->
+<!--                  <goal>npm</goal>-->
+<!--                </goals>-->
+<!--                <phase>test</phase>-->
+<!--                <configuration>-->
+<!--                  <skip>${skipKarmaTests}</skip>-->
+<!--                  <installDirectory>${project.parent.build.directory}</installDirectory>-->
+<!--                  <arguments>run test</arguments>-->
+<!--                </configuration>-->
+<!--              </execution>-->
+<!--              <execution>-->
+<!--                <id>protractor tests</id>-->
+<!--                <goals>-->
+<!--                  <goal>npm</goal>-->
+<!--                </goals>-->
+<!--                <phase>integration-test</phase>-->
+<!--                <configuration>-->
+<!--                  <skip>${skipProtractorTests}</skip>-->
+<!--                  <installDirectory>${project.parent.build.directory}</installDirectory>-->
+<!--                  <arguments>run e2e</arguments>-->
+<!--                </configuration>-->
+<!--              </execution>-->
               <!-- execute command "npm build" inside workingDirectory to clean and create "/dist" directory -->
               <execution>
                 <id>npm build</id>
@@ -138,7 +171,7 @@
                   <goal>npm</goal>
                 </goals>
                 <configuration>
-                  <installDirectory>${project.parent.build.directory}</installDirectory>
+                  <installDirectory>${project.parent.build.directory1}</installDirectory>
                   <arguments>run build</arguments>
                 </configuration>
               </execution>
@@ -160,7 +193,7 @@
                   <outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
                   <resources>
                     <resource>
-                      <directory>${project.build.directory}/generated-resources/dist</directory>
+                      <directory>${project.build.directory}/dist</directory>
                     </resource>
                   </resources>
                 </configuration>
@@ -185,7 +218,7 @@
               <replacements>
                 <replacement>
                   <token>"version": "(.*)",</token>
-                  <value>"version": "${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}",</value>
+                  <value>"version": "1.2.3",</value>
                 </replacement>
               </replacements>
             </configuration>
