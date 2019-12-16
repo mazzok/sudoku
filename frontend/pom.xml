@@ -4,9 +4,13 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>sudoku</groupId>
+  <parent>
+    <artifactId>automaticsudoku</artifactId>
+    <groupId>sudoku</groupId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
   <artifactId>frontend</artifactId>
-  <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <properties>
@@ -73,24 +77,6 @@
       </activation>
       <build>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <version>1.1</version>
-            <executions>
-              <execution>
-                <phase>validate</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <configuration>
-                  <tasks>
-                    <echo>[${project.build.directory}/${project.build.finalName}] ${project.parent.build.directory}</echo>
-                  </tasks>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
 
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -218,7 +204,7 @@
               <replacements>
                 <replacement>
                   <token>"version": "(.*)",</token>
-                  <value>"version": "1.2.3",</value>
+                  <value>"version": "${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}",</value>
                 </replacement>
               </replacements>
             </configuration>
