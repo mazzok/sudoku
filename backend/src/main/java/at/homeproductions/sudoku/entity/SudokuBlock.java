@@ -1,4 +1,4 @@
-package sudoku;
+package at.homeproductions.sudoku.entity;
 
 public class SudokuBlock {
 

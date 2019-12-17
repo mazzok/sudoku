@@ -1,4 +1,4 @@
-package sudoku;
+package at.homeproductions.sudoku.entity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,12 +7,12 @@ import java.util.stream.Collectors;
 public class SudokuSnapshot extends Sudoku {
     private String message;
 
-//    private SudokuSnapshot (Sudoku sudoku) {
+//    private SudokuSnapshot (Sudoku at.homeproductions.sudoku) {
 //
 //    }
 
-//    public SudokuSnapshot(String message, Sudoku sudoku) {
-//        this(sudoku);
+//    public SudokuSnapshot(String message, Sudoku at.homeproductions.sudoku) {
+//        this(at.homeproductions.sudoku);
 //        this.message = message;
 //    }
 
