@@ -1,8 +1,4 @@
-import sudoku.Sudoku;
-
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
+import at.homeproductions.sudoku.entity.Sudoku;
 
 public class main {
 

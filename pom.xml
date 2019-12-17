@@ -11,7 +11,7 @@
         <module>war</module>
     </modules>
 
-    <groupId>sudoku</groupId>
+    <groupId>at.homeproductions.sudoku</groupId>
     <artifactId>automaticsudoku</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
