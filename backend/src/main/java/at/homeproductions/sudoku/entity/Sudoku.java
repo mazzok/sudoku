@@ -120,7 +120,7 @@ public class Sudoku {
     }
 
 
-    private boolean trySolvingFields(SudokuField [] sudokuFieldArray, String type) {
+    private boolean trySolvingFields(SudokuField[] sudokuFieldArray, String type) {
 
         Map<String, List<SudokuField>> samePossibleValuesMap = Arrays.stream(sudokuFieldArray)
                 .filter(s -> s.getPossibleValues().size() > 0)
@@ -144,7 +144,7 @@ public class Sudoku {
             while(it.hasNext()) {
                 Map.Entry<String, List<SudokuField>> entry = it.next();
 
-                String message = String.format("There are %n field within the same %s, which can only contain one of the values [%s]." +
+                String message = String.format("There are %s field within the same %s, which can only contain one of the values [%s]." +
                                 " Therefore these values are removed from all other fields of the same %s",
                         entry.getValue().size(),
                         type,
@@ -211,11 +211,11 @@ public class Sudoku {
         return sudokuFields.stream().map(s -> getColIndex(s)).distinct().count() == 1 ? true : false;
     }
 
-    private List<SudokuField> getFieldsByValue(Integer singlePossibleValuesMap, SudokuField [] sudokuFieldArray) {
+    private List<SudokuField> getFieldsByValue(Integer singlePossibleValuesMap, SudokuField[] sudokuFieldArray) {
         return Arrays.stream(sudokuFieldArray).filter(s -> s.getPossibleValues().contains(singlePossibleValuesMap)).collect(Collectors.toList());
     }
 
-    private Integer containsSinglePossibleValue(SudokuField [] sudokuFieldArray) {
+    private Integer containsSinglePossibleValue(SudokuField[] sudokuFieldArray) {
         Map<Integer,List<SudokuField>> map = Arrays.stream(sudokuFieldArray).filter(s-> s.getPossibleValues().size() > 0)
                 .collect(Collectors.groupingBy(s -> s.getPossibleValues().size()) );
 
@@ -248,7 +248,7 @@ public class Sudoku {
 
     private List<SudokuField> sortFieldsByPossibleValues() {
         Stream<SudokuBlock> l = Arrays.stream(this.blocks).flatMap(b -> Stream.of(b));
-        Stream<SudokuField[][]> j = l.map( b -> b.getFields());
+        Stream<SudokuField[][]> j = l.map(b -> b.getFields());
         Stream<SudokuField> u = j
                 .flatMap(f -> Arrays.stream(f))
                 .flatMap(f -> Stream.of(f));
@@ -326,20 +326,57 @@ public class Sudoku {
                 reactors.stream().map(s -> SudokuSnapshotField.asReactor(s) ).collect(Collectors.toList()),
                 this);
 
-
-
-
         this.snapshots.add(snapshot);
     }
 
     public void printSolutionTrail() {
         for (int i = 0; i < this.snapshots.size();i++) {
             SudokuSnapshot s = this.snapshots.get(i);
-            System.out.println(String.format("----------(STEP %n .)-------------",i));
+            System.out.println(String.format("----------(STEP %s.)-------------",i));
 
             System.out.println(s.getMessage());
             System.out.println(s.toString());
 
         }
+    }
+
+    public int getyBlockDim() {
+        return yBlockDim;
+    }
+
+    public int getxBlockDim() {
+        return xBlockDim;
+    }
+
+    public SudokuBlock[][] getBlocks() {
+        return blocks;
+    }
+
+    public void setBlocks(SudokuBlock[][] blocks) {
+        this.blocks = blocks;
+    }
+
+    public int getxBlocks() {
+        return xBlocks;
+    }
+
+    public void setxBlocks(int xBlocks) {
+        this.xBlocks = xBlocks;
+    }
+
+    public int getyBlocks() {
+        return yBlocks;
+    }
+
+    public void setyBlocks(int yBlocks) {
+        this.yBlocks = yBlocks;
+    }
+
+    public List<SudokuSnapshot> getSnapshots() {
+        return snapshots;
+    }
+
+    public void setSnapshots(List<SudokuSnapshot> snapshots) {
+        this.snapshots = snapshots;
     }
 }

@@ -23,8 +23,11 @@ public class SudokuSnapshot extends Sudoku {
             }
         }
 
-        matchFieldsByCoords(actors).stream().map(s -> (SudokuSnapshotField)s).forEach(s -> s.setActor(true));
+        matchFieldsByCoords(actors).stream()
+//                .peek(s -> System.out.println("peek matched fields "+ s))
+                .map(s -> (SudokuSnapshotField)s).forEach(s -> s.setActor(true));
         matchFieldsByCoords(reactors).stream().map(s -> (SudokuSnapshotField)s).forEach(s -> s.setReactor(true));
+        this.message = message;
     }
 
     private List<SudokuField> matchFieldsByCoords(List<SudokuSnapshotField> reference) {
@@ -33,11 +36,17 @@ public class SudokuSnapshot extends Sudoku {
                 .map(SudokuBlock::getFields)
                 .flatMap(Arrays::stream)
                 .flatMap(Arrays::stream)
-                .filter(s -> reference.stream().anyMatch(ss -> ss.equalsCoordinates(s.getBlock().getY(), s.getBlock().getX(), s.getY(), s.getX())))
+                .filter(s -> {
+                    return reference.stream().anyMatch(ss -> ss.equalsCoordinates(s.getBlock().getY(), s.getBlock().getX(), s.getY(), s.getX()));
+                })
                 .collect(Collectors.toList());
     }
 
     public String getMessage() {
         return this.message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

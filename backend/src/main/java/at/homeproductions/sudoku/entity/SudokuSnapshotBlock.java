@@ -1,11 +1,14 @@
 package at.homeproductions.sudoku.entity;
 
-public class SudokuSnapshotBlock extends SudokuBlock{
+public class SudokuSnapshotBlock extends SudokuBlock {
     public SudokuSnapshotBlock(SudokuBlock sudokuBlock) {
         copy(sudokuBlock);
     }
 
     private void copy(SudokuBlock sudokuBlock) {
+        this.xDim = sudokuBlock.getXDim();
+        this.yDim = sudokuBlock.getYDim();
+        this.fields = new SudokuField[yDim][xDim];
         for(int y = 0; y < this.getYDim();y++ ) {
             for(int x = 0; x < getXDim();x++) {
                 this.fields[y][x] = new SudokuSnapshotField(sudokuBlock.fields[y][x]);
@@ -22,4 +25,6 @@ public class SudokuSnapshotBlock extends SudokuBlock{
     protected SudokuSnapshotField createSudokuField(int fieldY, int fieldX) {
         return new SudokuSnapshotField(this, fieldY, fieldX);
     }
+
+
 }

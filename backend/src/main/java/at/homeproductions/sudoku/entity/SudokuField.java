@@ -75,6 +75,26 @@ public class SudokuField {
         return y;
     }
 
+    public void setBlock(SudokuBlock block) {
+        this.block = block;
+    }
+
+    public void setValue(Integer value) {
+        this.value = value;
+    }
+
+    public void setPossibleValues(List<Integer> possibleValues) {
+        this.possibleValues = possibleValues;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public void setValue(Integer value, SudokuField[] row, SudokuField[] column) {
         this.value = value;
         System.out.println("Setting Value to "+value);
@@ -83,7 +103,7 @@ public class SudokuField {
                 .distinct().collect(Collectors.toList());
 
         reactors.forEach(sf -> sf.getPossibleValues().remove(value));
-        this.getBlock().getSudoku().logSolutionTrailStep(String.format("Setting Field  %s Value to %s, removing the valu from columns and rows", this, value), Collections.singletonList(this), reactors );
+        this.getBlock().getSudoku().logSolutionTrailStep(String.format("Setting Field  %s Value to %s, removing the value from columns and rows", this, value), Collections.singletonList(this), reactors );
 
         this.getPossibleValues().clear();
     }

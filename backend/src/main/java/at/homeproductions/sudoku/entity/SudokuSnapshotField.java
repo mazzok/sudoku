@@ -1,5 +1,7 @@
 package at.homeproductions.sudoku.entity;
 
+import java.util.ArrayList;
+
 public class SudokuSnapshotField extends SudokuField {
     private boolean isReactor;
     private boolean isActor;
@@ -33,7 +35,10 @@ public class SudokuSnapshotField extends SudokuField {
 
     private void copy(SudokuField sudokuField) {
         this.value = sudokuField.value;
-        this.possibleValues= sudokuField.possibleValues;
+        this.x = sudokuField.getX();
+        this.y = sudokuField.getY();
+        this.block = sudokuField.getBlock();
+        this.possibleValues= new ArrayList(sudokuField.possibleValues);
     }
 
 

@@ -3,7 +3,7 @@ package at.homeproductions.sudoku.entity;
 public class SudokuBlock {
 
 
-    protected SudokuField [][] fields;
+    protected SudokuField[][] fields;
     private Sudoku sudoku;
     protected int x;
     protected int y;
@@ -14,7 +14,7 @@ public class SudokuBlock {
         super();
     }
 
-    public SudokuBlock(Sudoku sudoku,int x, int y,int xDim, int yDim) {
+    public SudokuBlock(Sudoku sudoku, int x, int y, int xDim, int yDim) {
         this.sudoku = sudoku;
         this.x = x;
         this.y = y;
