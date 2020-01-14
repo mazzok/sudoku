@@ -12,6 +12,8 @@ public class SudokuBlockConverter {
 
     public static SudokuBlockModel fromEntity(SudokuBlock entity) {
         SudokuBlockModel sudokuBlockModel = new SudokuBlockModel();
+        sudokuBlockModel.setxDim(entity.getXDim());
+        sudokuBlockModel.setyDim(entity.getYDim());
         sudokuBlockModel.setX(entity.getX());
         sudokuBlockModel.setY(entity.getY());
         sudokuBlockModel.setSudokuFields(SudokuFieldConverter.fromEntityList(
