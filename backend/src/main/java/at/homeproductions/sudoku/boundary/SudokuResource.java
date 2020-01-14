@@ -1,6 +1,7 @@
 package at.homeproductions.sudoku.boundary;
 
 
+import at.homeproductions.sudoku.converter.SudokuConverter;
 import at.homeproductions.sudoku.entity.Sudoku;
 
 import javax.ejb.Stateless;
@@ -41,6 +42,6 @@ public class SudokuResource {
         s.addField(7,8,7);
 
         s.solve();
-        return Response.ok(s).build();
+        return Response.ok(SudokuConverter.fromEntity(s)).build();
     }
 }
