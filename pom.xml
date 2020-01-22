@@ -9,6 +9,7 @@
         <module>backend</module>
         <module>frontend</module>
         <module>war</module>
+        <module>quarkus</module>
     </modules>
 
     <groupId>at.homeproductions.sudoku</groupId>
