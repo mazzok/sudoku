@@ -176,7 +176,7 @@
                 </goals>
                 <configuration>
                   <overwrite>true</overwrite>
-                  <outputDirectory>${project.build.directory}/${project.build.finalName}/</outputDirectory>
+                  <outputDirectory>${basedir}/target/classes/META-INF/resources/</outputDirectory>
                   <resources>
                     <resource>
                       <directory>${project.build.directory}/dist</directory>
