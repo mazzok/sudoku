@@ -5,13 +5,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>automaticsudoku</artifactId>
+    <artifactId>automaticsudoku-dml</artifactId>
     <groupId>at.homeproductions.sudoku</groupId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>frontend</artifactId>
-  <packaging>war</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
