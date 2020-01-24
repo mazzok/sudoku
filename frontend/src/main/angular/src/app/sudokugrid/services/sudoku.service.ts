@@ -7,7 +7,7 @@ import { SudokuModel } from "../models/sudokumodel";
 export class SudokuService {
   constructor(private http: HttpClient) {}
 
-  url = "sudoku/resources/sudoku/solve";
+  url = "hello";
 
   public getSudoku(): Observable<SudokuModel> {
     console.log("getting Sudoku from " + this.url);

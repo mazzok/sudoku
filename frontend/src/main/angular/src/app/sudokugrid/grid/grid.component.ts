@@ -31,15 +31,23 @@ export class GridComponent implements OnInit {
     let x = 0;
     let y = 0;
     this.sudokuGrid = [];
+    console.log(
+      "this.sudoku.sudokuBlocks.length " + this.sudoku.sudokuBlocks.length
+    );
     while (i < this.sudoku.sudokuBlocks.length) {
-      if (x < this.sudoku.xDim) {
-        this.sudokuGrid[y][x] = this.sudoku.sudokuBlocks[i];
-        console.log("y:" + y + " x:" + x);
-        x++;
-      } else {
+      if (x >= this.sudoku.xDim) {
         x = 0;
         y++;
       }
+
+      if (this.sudokuGrid[y] === undefined) {
+        this.sudokuGrid[y] = [];
+      }
+
+      this.sudokuGrid[y][x] = this.sudoku.sudokuBlocks[i];
+      console.log("y:" + y + " x:" + x);
+
+      x++;
       i++;
     }
   }
