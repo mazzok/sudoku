@@ -2,9 +2,9 @@
   <!-- <pre>{{ sudoku | json }}</pre> -->
 
   <div class="container-fluid">
-    <div class="row" *ngFor="let gridArrayY of sudokuGrid">
-      <div class="btn-group" *ngFor="let gridArrayX of gridArrayY">
-        <block [block]="gridArrayX"></block>
+    <div class="row" *ngFor="let blockYArray of sudokuGrid">
+      <div class="btn-group" *ngFor="let blockX of blockYArray">
+        <block [block]="blockX"></block>
         <!-- <button type="button" class="btn btn-default col-md-4">1</button> -->
       </div>
     </div>
