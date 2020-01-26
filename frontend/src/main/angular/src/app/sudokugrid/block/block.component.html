@@ -1,7 +1,12 @@
-<div class="container-fluid">
-  <div class="row" *ngFor="let fieldYArray of blockGrid">
-    <div class="btn-group" *ngFor="let fieldX of fieldYArray">
-      <field [field]="fieldX"></field>
-    </div>
+<!-- ({{ block.x }},{{ block.y }}) -->
+<!-- <p>{{ yFields }}, {{ xFields }}</p> -->
+
+<div
+  class="fieldgrid"
+  [style.grid-template-rows]="yFields"
+  [style.grid-template-columns]="xFields"
+>
+  <div class="field" *ngFor="let field of block.sudokuFields">
+    <field [field]="field"></field>
   </div>
 </div>

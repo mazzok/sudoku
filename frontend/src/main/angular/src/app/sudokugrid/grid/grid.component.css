@@ -1,0 +1,15 @@
+.block {
+  background-color: rgb(105, 105, 105);
+  color: #fff;
+  border-radius: 5px;
+  /* padding: 20px; */
+  font-size: 150%;
+}
+
+.blockgrid {
+  /* width: 600px; */
+  background-color: #444;
+  display: grid;
+  grid-gap: 5px;
+  /* grid-auto-flow: row; */
+}

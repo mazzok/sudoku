@@ -1,29 +1,11 @@
 <ng-container *ngIf="sudoku">
-  <!-- <pre>{{ sudoku | json }}</pre> -->
-
-  <div class="container-fluid">
-    <div class="row" *ngFor="let blockYArray of sudokuGrid">
-      <div class="btn-group" *ngFor="let blockX of blockYArray">
-        <block [block]="blockX"></block>
-        <!-- <button type="button" class="btn btn-default col-md-4">1</button> -->
-      </div>
+  <div
+    class="blockgrid"
+    [style.grid-template-rows]="yBlocks"
+    [style.grid-template-columns]="xBlocks"
+  >
+    <div class="block" *ngFor="let block of sudoku.sudokuBlocks">
+      <block [block]="block"></block>
     </div>
-
-    //
-    <!-- <div class="row">
-  //     <div class=" btn-group">
-  //       <button type="button" class="btn btn-default col-md-4">Button 4</button>
-  //       <button type="button" class="btn btn-default col-md-4">Button 5</button>
-  //       <button type="button" class="btn btn-default col-md-4">Button 6</button>
-  //     </div>
-  //   </div>
-  //   <div class="row">
-  //     <div class=" btn-group">
-  //       <button type="button" class="btn btn-default col-md-4">Button 7</button>
-  //       <button type="button" class="btn btn-default col-md-4">Button 8</button>
-  //       <button type="button" class="btn btn-default col-md-4">Button 9</button>
-  //     </div>
-  //   </div -->
-    //
   </div>
 </ng-container>

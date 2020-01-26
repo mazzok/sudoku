@@ -4,42 +4,35 @@ import { SudokuFieldModel } from "../models/sudokufieldmodel";
 
 @Component({
   selector: "block",
-  templateUrl: "./block.component.html"
+  templateUrl: "./block.component.html",
+  styleUrls: ["./block.component.css"]
 })
 export class BlockComponent implements OnInit {
+  yFields: string = "";
+  xFields: string = "";
+
   @Input()
   block: SudokuBlockModel;
-
-  blockGrid: SudokuFieldModel[][];
 
   constructor() {}
 
   ngOnInit() {
-    this.initBlocks();
+    this.initFieldGridProperties();
   }
 
-  initBlocks() {
-    let i = 0;
-    let x = 0;
-    let y = 0;
-    this.blockGrid = [];
-    console.log(" this block field size" + this.block.sudokuFields.length);
+  initFieldGridProperties() {
+    let x: number = 0;
+    let y: number = 0;
 
-    while (i < this.block.sudokuFields.length) {
-      if (x >= this.block.xDim) {
-        x = 0;
-        y++;
-      }
-
-      if (this.blockGrid[y] === undefined) {
-        this.blockGrid[y] = [];
-      }
-
-      this.blockGrid[y][x] = this.block.sudokuFields[i];
-      console.log("y:" + y + " x:" + x);
-
+    while (x < this.block.xDim) {
+      this.xFields = this.xFields + "1fr ";
       x++;
-      i++;
+    }
+
+    while (y < this.block.yDim) {
+      this.yFields = this.yFields + "1fr ";
+      y++;
     }
   }
+
 }

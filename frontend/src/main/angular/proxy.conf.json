@@ -1,11 +1,6 @@
 {
-  "/**/resources/**": {
-    "target": "https://localhost:8443",
+  "/sudoku": {
+    "target": "http://localhost:9080",
     "secure": false
-  },
-  "/sudoku/**": {
-    "target": "https://localhost:8443",
-    "secure": false,
-    "ws": true
   }
 }
