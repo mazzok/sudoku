@@ -4,8 +4,8 @@
     [style.grid-template-rows]="yBlocks"
     [style.grid-template-columns]="xBlocks"
   >
-    <div class="block" *ngFor="let block of sudoku.sudokuBlocks">
+    <ng-container *ngFor="let block of sudoku.sudokuBlocks">
       <block [block]="block"></block>
-    </div>
+    </ng-container>
   </div>
 </ng-container>

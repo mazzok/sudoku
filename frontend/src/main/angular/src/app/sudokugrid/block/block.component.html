@@ -1,12 +1,13 @@
 <!-- ({{ block.x }},{{ block.y }}) -->
 <!-- <p>{{ yFields }}, {{ xFields }}</p> -->
-
-<div
-  class="fieldgrid"
-  [style.grid-template-rows]="yFields"
-  [style.grid-template-columns]="xFields"
->
-  <ng-container *ngFor="let field of block.sudokuFields">
-    <field [field]="field"></field>
-  </ng-container>
+<div class="block-style">
+  <div
+    class="fieldgrid"
+    [style.grid-template-rows]="yFields"
+    [style.grid-template-columns]="xFields"
+  >
+    <ng-container *ngFor="let field of block.sudokuFields">
+      <field [field]="field"></field>
+    </ng-container>
+  </div>
 </div>
