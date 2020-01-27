@@ -13,4 +13,8 @@ export class FieldComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  onFieldClick(): void {
+    console.log("clicked on field " + this.field.x + " , " + this.field.y);
+  }
 }
