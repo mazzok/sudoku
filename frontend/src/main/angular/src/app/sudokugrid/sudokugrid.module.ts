@@ -9,9 +9,15 @@ import { FieldComponent } from "./field/field.component";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { ButtonsModule } from "ngx-bootstrap/buttons";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { PossibleValuesComponent } from "./field/possiblevalues/possiblevalues/possiblevalues.component";
 
 @NgModule({
-  declarations: [GridComponent, BlockComponent, FieldComponent],
+  declarations: [
+    GridComponent,
+    BlockComponent,
+    FieldComponent,
+    PossibleValuesComponent
+  ],
   imports: [
     CommonModule,
     SudokugridRoutingModule,

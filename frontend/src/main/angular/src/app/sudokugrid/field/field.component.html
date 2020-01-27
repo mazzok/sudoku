@@ -1,9 +1,15 @@
 <div class="field-style dropdown" (click)="onFieldClick()">
-  <button type="button">
+  <button type="button" class="dropbtn">
     {{ field.value }}
   </button>
-
-  <div class="dropdown-content">
-    <p>Hello World!</p>
-  </div>
+  <ng-container *ngIf="field.possibleValues.length > 0">
+    <div class="dropdown-content">
+      <p>
+        <possiblevalues
+          [possibleValues]="field.possibleValues"
+          [(field)]="field"
+        ></possiblevalues>
+      </p>
+    </div>
+  </ng-container>
 </div>

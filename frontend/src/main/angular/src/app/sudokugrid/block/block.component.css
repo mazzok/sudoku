@@ -1,0 +1,16 @@
+.fieldgrid {
+  /* width: 60px; */
+  display: grid;
+  grid-gap: 2px;
+  /* grid-auto-flow: row; */
+}
+
+.block-style {
+  height: 100%;
+  width: 100%;
+  background-color: rgb(105, 105, 105);
+  color: #fff;
+  border-radius: 5px;
+  /* padding: 20px; */
+  font-size: 150%;
+}
