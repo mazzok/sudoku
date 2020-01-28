@@ -6,9 +6,20 @@ import at.homeproductions.sudoku.model.SudokuFieldModel;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SudokuFieldConverter {
+public class SudokuFieldConverter extends AbstractConverter<SudokuFieldModel, SudokuField> {
 
-    public static SudokuFieldModel fromEntity(SudokuField entity) {
+    @Override
+    public SudokuField toEntity(SudokuFieldModel model) {
+        SudokuField sudokuField = new SudokuField();
+        sudokuField.setX(model.getX());
+        sudokuField.setY(model.getY());
+        sudokuField.setValue(model.getValue());
+        sudokuField.setPossibleValues(model.getPossibleValues());
+        return sudokuField;
+    }
+
+    @Override
+    public SudokuFieldModel toModel(SudokuField entity) {
         SudokuFieldModel sudokuFieldModel = new SudokuFieldModel();
         sudokuFieldModel.setX(entity.getX());
         sudokuFieldModel.setY(entity.getY());
@@ -17,7 +28,14 @@ public class SudokuFieldConverter {
         return sudokuFieldModel;
     }
 
-    public static List<SudokuFieldModel> fromEntityList(List<SudokuField> sudokuFieldList) {
-        return sudokuFieldList.stream().map(SudokuFieldConverter::fromEntity).collect(Collectors.toList());
+    @Override
+    protected Class<SudokuFieldModel> getModelClass() {
+        return SudokuFieldModel.class;
     }
+
+    @Override
+    protected Class<SudokuField> getEntityClass() {
+        return SudokuField.class;
+    }
+
 }

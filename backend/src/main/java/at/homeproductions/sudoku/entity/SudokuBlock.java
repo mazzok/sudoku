@@ -10,7 +10,7 @@ public class SudokuBlock {
     protected int xDim;
     protected int yDim;
 
-    protected SudokuBlock() {
+    public SudokuBlock() {
         super();
     }
 
@@ -68,5 +68,25 @@ public class SudokuBlock {
 
     public Sudoku getSudoku() {
         return sudoku;
+    }
+
+    public void setFields(SudokuField[][] fields) {
+        this.fields = fields;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setxDim(int xDim) {
+        this.xDim = xDim;
+    }
+
+    public void setyDim(int yDim) {
+        this.yDim = yDim;
     }
 }

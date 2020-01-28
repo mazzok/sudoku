@@ -17,7 +17,7 @@ public class SudokuField {
     protected int x;
     protected int y;
 
-    protected SudokuField() {
+    public SudokuField() {
         super();
     }
 

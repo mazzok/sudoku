@@ -6,7 +6,7 @@ public class SudokuFieldModel {
 
     private int x;
     private int y;
-    private int value;
+    private Integer value;
     private List<Integer> possibleValues;
 
     public int getX() {
@@ -25,11 +25,11 @@ public class SudokuFieldModel {
         this.y = y;
     }
 
-    public int getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(Integer value) {
         this.value = value;
     }
 

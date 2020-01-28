@@ -8,8 +8,8 @@ import java.util.stream.Stream;
 public class Sudoku {
 
 
-    protected final int yBlockDim;
-    protected final int xBlockDim;
+    protected int yBlockDim;
+    protected int xBlockDim;
     protected SudokuBlock[][] blocks;
     protected int xBlocks;
     protected int yBlocks;
@@ -39,6 +39,7 @@ public class Sudoku {
         int xBlockCoord = x / this.xBlocks;
         int yBlockCoord = y / this.xBlocks;
         this.blocks[yBlockCoord][xBlockCoord].addField(x % this.xBlockDim,y % this.yBlockDim, new SudokuField(this.blocks[yBlockCoord][xBlockCoord],x % this.xBlockDim,y % this.yBlockDim, value));
+        calculateCandidates();
     }
 
     @Override
@@ -288,7 +289,7 @@ public class Sudoku {
 
     }
 
-    private void calculateCandidates() {
+    public void calculateCandidates() {
         for ( int i = 0; i < this.yBlocks;i++) {
             for (int j = 0 ; j < this.xBlocks;j++) {
                 SudokuBlock b = this.blocks[i][j];
@@ -346,6 +347,14 @@ public class Sudoku {
 
     public int getxBlockDim() {
         return xBlockDim;
+    }
+
+    public void setyBlockDim(int yBlockDim) {
+        this.yBlockDim = yBlockDim;
+    }
+
+    public void setxBlockDim(int xBlockDim) {
+        this.xBlockDim = xBlockDim;
     }
 
     public SudokuBlock[][] getBlocks() {
