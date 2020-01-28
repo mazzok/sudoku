@@ -31,6 +31,10 @@ public abstract class AbstractConverter<M, E> {
         return array;
     }
 
+    public List<E> toEntityList(List<M> modelList) {
+        return modelList.stream().map(this::toEntity).collect(Collectors.toList());
+    }
+
     public List<M> toModelList(List<E> entityList) {
         return entityList.stream().map(this::toModel).collect(Collectors.toList());
     }

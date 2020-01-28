@@ -1,5 +1,7 @@
 package at.homeproductions.sudoku.model;
 
+import at.homeproductions.sudoku.entity.PossibleValue;
+
 import java.util.List;
 
 public class SudokuFieldModel {
@@ -7,7 +9,7 @@ public class SudokuFieldModel {
     private int x;
     private int y;
     private Integer value;
-    private List<Integer> possibleValues;
+    private List<PossibleValueModel> possibleValues;
 
     public int getX() {
         return x;
@@ -33,11 +35,11 @@ public class SudokuFieldModel {
         this.value = value;
     }
 
-    public List<Integer> getPossibleValues() {
+    public List<PossibleValueModel> getPossibleValues() {
         return possibleValues;
     }
 
-    public void setPossibleValues(List<Integer> possibleValues) {
+    public void setPossibleValues(List<PossibleValueModel> possibleValues) {
         this.possibleValues = possibleValues;
     }
 }

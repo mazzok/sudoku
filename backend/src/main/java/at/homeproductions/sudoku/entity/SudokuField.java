@@ -13,7 +13,7 @@ public class SudokuField {
     protected SudokuBlock block;
     protected Integer value;
 
-    protected List<Integer> possibleValues = new ArrayList<>();
+    protected List<PossibleValue> possibleValues = new ArrayList<>();
     protected int x;
     protected int y;
 
@@ -46,7 +46,7 @@ public class SudokuField {
 
 
     private void initPossibleValues() {
-        this.possibleValues = IntStream.rangeClosed(1,9).boxed().collect(Collectors.toList());
+        this.possibleValues = IntStream.rangeClosed(1,9).boxed().map(PossibleValue::new).collect(Collectors.toList());
     }
 
     public Integer getValue() {
@@ -59,7 +59,7 @@ public class SudokuField {
                 "in block ["+getBlock().getX()+","+getBlock().getY()+"] with value: " + String.valueOf(this.getValue());
     }
 
-    public List<Integer> getPossibleValues() {
+    public List<PossibleValue> getPossibleValues() {
         return this.possibleValues;
     }
 
@@ -83,7 +83,7 @@ public class SudokuField {
         this.value = value;
     }
 
-    public void setPossibleValues(List<Integer> possibleValues) {
+    public void setPossibleValues(List<PossibleValue> possibleValues) {
         this.possibleValues = possibleValues;
     }
 
@@ -102,10 +102,13 @@ public class SudokuField {
                 Stream.concat(Arrays.stream(row),Arrays.stream(column)))
                 .distinct().collect(Collectors.toList());
 
-        reactors.forEach(sf -> sf.getPossibleValues().remove(value));
+        reactors.forEach(sf -> sf.getPossibleValues()
+                .stream()
+                .filter(p -> p.getValue()==value)
+                .forEach(p-> p.setHide(true)));
         this.getBlock().getSudoku().logSolutionTrailStep(String.format("Setting Field  %s Value to %s, removing the value from columns and rows", this, value), Collections.singletonList(this), reactors );
 
-        this.getPossibleValues().clear();
+        this.getPossibleValues().forEach(p->p.setHide(true));
     }
 
     public boolean equalsCoordinates(int blockY, int blockX, int fieldY, int fieldX) {
