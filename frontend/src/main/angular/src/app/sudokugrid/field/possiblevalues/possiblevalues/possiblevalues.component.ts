@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { SudokuFieldModel } from "src/app/sudokugrid/models/sudokufieldmodel";
 import { SudokuService } from "src/app/sudokugrid/services/sudoku.service";
 import { SudokuCacheService } from "src/app/sudokugrid/services/sudokucache.service";
+import { PossibleValueModel } from "src/app/sudokugrid/models/possiblevaluemodel";
 
 @Component({
   selector: "possiblevalues",
@@ -10,7 +11,7 @@ import { SudokuCacheService } from "src/app/sudokugrid/services/sudokucache.serv
 })
 export class PossibleValuesComponent implements OnInit {
   @Input()
-  possibleValues: number[];
+  possibleValues: PossibleValueModel[];
 
   @Input()
   field: SudokuFieldModel;
@@ -27,8 +28,8 @@ export class PossibleValuesComponent implements OnInit {
 
   ngOnInit() {}
 
-  valueClicked(n: number) {
-    this.field.value = n;
+  valueClicked(n: PossibleValueModel) {
+    this.field.value = n.value;
     console.log("Value changed to " + n + " trigger caluclateCandidates");
     this.sudokuService
       .calculateCandidates(this.sudokuCache.sudoku.getValue())

@@ -6,15 +6,17 @@ import at.homeproductions.sudoku.model.PossibleValueModel;
 public class PossibleValueConverter extends AbstractConverter<PossibleValueModel, PossibleValue> {
     @Override
     public PossibleValue toEntity(PossibleValueModel model) {
-        PossibleValue entity = new PossibleValue(model.getValue());
-        entity.setHide(model.isHide());
+        PossibleValue entity = new PossibleValue();
+        entity.setValue(model.getValue());
+        entity.setIsHidden(model.getIsHidden());
         return entity;
     }
 
     @Override
     public PossibleValueModel toModel(PossibleValue entity) {
-        PossibleValueModel model = new PossibleValueModel(entity.getValue());
-        model.setHide(entity.isHide());
+        PossibleValueModel model = new PossibleValueModel();
+        model.setValue(entity.getValue());
+        model.setIsHidden(entity.getIsHidden());
         return model;
     }
 

@@ -3,10 +3,14 @@ package at.homeproductions.sudoku.entity;
 public class PossibleValue {
 
     Integer value;
-    boolean hide;
+    boolean isHidden;
 
     public PossibleValue(Integer value){
         this.value = value;
+    }
+
+    public PossibleValue() {
+        super();
     }
 
     public Integer getValue() {
@@ -17,11 +21,11 @@ public class PossibleValue {
         this.value = value;
     }
 
-    public boolean isHide() {
-        return hide;
+    public boolean getIsHidden() {
+        return isHidden;
     }
 
-    public void setHide(boolean hide) {
-        this.hide = hide;
+    public void setIsHidden(boolean isHidden) {
+        this.isHidden = isHidden;
     }
 }

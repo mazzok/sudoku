@@ -47,7 +47,7 @@ public class Sudoku {
         StringBuffer b = new StringBuffer();
         for (int i = 0; i < this.yBlockDim*this.yBlocks;i++) {
             b.append(Arrays.stream(getRow(i))
-                    .map(f -> f.getValue() != null ? String.valueOf(f.getValue()) : "["+f.getPossibleValues().stream().map(k -> String.valueOf(k.getValue()) + (k.isHide() == true ? "(h)" : "")).collect(Collectors.joining(","))+"]")
+                    .map(f -> f.getValue() != null ? String.valueOf(f.getValue()) : "["+f.getPossibleValues().stream().map(k -> String.valueOf(k.getValue()) + (k.getIsHidden() == true ? "(h)" : "")).collect(Collectors.joining(","))+"]")
                     .collect(Collectors.joining(";")) + System.getProperty("line.separator"));
         }
         return b.toString();
@@ -93,8 +93,8 @@ public class Sudoku {
                 System.out.println("processing "+ f.toString());
                 SudokuField[] row = getRow(this.getRowIndex(f));
                 SudokuField[] column = getColumn(this.getColIndex(f));
-                if (f.getPossibleValues().stream().filter(p->!p.isHide()).count() == 1) {
-                    f.setValue(f.getPossibleValues().stream().filter(p->!p.isHide()).findFirst().get().getValue(), row, column);
+                if (f.getPossibleValues().stream().filter(p->!p.getIsHidden()).count() == 1) {
+                    f.setValue(f.getPossibleValues().stream().filter(p->!p.getIsHidden()).findFirst().get().getValue(), row, column);
                     continue;
                 } else {
                     if (trySolvingFields(Arrays.stream(f.getBlock().getFields()).flatMap(s -> Stream.of(s)).toArray(SudokuField[]::new),"block") == Boolean.TRUE
@@ -124,11 +124,11 @@ public class Sudoku {
     private boolean trySolvingFields(SudokuField[] sudokuFieldArray, String type) {
 
         Map<String, List<SudokuField>> samePossibleValuesMap = Arrays.stream(sudokuFieldArray)
-                .filter(s -> s.getPossibleValues().stream().anyMatch(p -> !p.isHide()))
+                .filter(s -> s.getPossibleValues().stream().anyMatch(p -> !p.getIsHidden()))
                 .collect(Collectors.groupingBy(
                         s -> s.getPossibleValues()
                                 .stream()
-                                .filter(p -> !p.isHide())
+                                .filter(p -> !p.getIsHidden())
                                 .map(i -> String.valueOf(i.getValue()))
                                 .collect(Collectors.joining(" ")
                                 )));
@@ -164,7 +164,7 @@ public class Sudoku {
                 otherSudokuFields.forEach(s -> s.getPossibleValues()
                         .stream()
                         .filter(p -> valuesToHide.contains(p.getValue()))
-                        .forEach(p-> p.setHide(true)));
+                        .forEach(p-> p.setIsHidden(true)));
 
                 this.logSolutionTrailStep(message, entry.getValue(), otherSudokuFields);
 
@@ -175,7 +175,7 @@ public class Sudoku {
                     row.forEach(s -> s.getPossibleValues()
                             .stream()
                             .filter(p -> valuesToHide.contains(p.getValue()))
-                            .forEach(p-> p.setHide(true)));
+                            .forEach(p-> p.setIsHidden(true)));
 
                     this.logSolutionTrailStep(String.format("These fields are additionally in the same row, therefore values [%s] are removed from there aswell"
                             ,Arrays.asList(entry.getKey().split(","))), entry.getValue(), row);
@@ -186,7 +186,7 @@ public class Sudoku {
                     column.forEach(s -> s.getPossibleValues()
                             .stream()
                             .filter(p -> valuesToHide.contains(p.getValue()))
-                            .forEach(p-> p.setHide(true)));
+                            .forEach(p-> p.setIsHidden(true)));
 
                     this.logSolutionTrailStep(String.format("These fields are additionally in the same column, therefore values [%s] are removed from there aswell"
                             ,Arrays.asList(entry.getKey().split(","))), entry.getValue(), column);
@@ -226,15 +226,15 @@ public class Sudoku {
         return Arrays.stream(sudokuFieldArray)
                 .filter(s -> s.getPossibleValues()
                         .stream()
-                        .filter(p -> !p.isHide() && p.getValue() == singlePossibleValuesMap)
+                        .filter(p -> !p.getIsHidden() && p.getValue() == singlePossibleValuesMap)
                         .count() > 0)
                 .collect(Collectors.toList());
     }
 
     private Integer containsSinglePossibleValue(SudokuField[] sudokuFieldArray) {
         Map<Integer,List<SudokuField>> map = Arrays.stream(sudokuFieldArray)
-                .filter(s-> s.getPossibleValues().stream().filter(p-> !p.isHide()).count() > 0)
-                .collect(Collectors.groupingBy(s -> (int)s.getPossibleValues().stream().filter(p-> !p.isHide()).count() ) );
+                .filter(s-> s.getPossibleValues().stream().filter(p-> !p.getIsHidden()).count() > 0)
+                .collect(Collectors.groupingBy(s -> (int)s.getPossibleValues().stream().filter(p-> !p.getIsHidden()).count() ) );
 
         if (map.isEmpty()) {
             System.out.println("ERROR");
@@ -246,7 +246,7 @@ public class Sudoku {
                 .flatMap(List::stream)
                 .map(s -> s.getPossibleValues())
                 .flatMap(List::stream)
-                .filter(p -> !p.isHide())
+                .filter(p -> !p.getIsHidden())
                 .map(PossibleValue::getValue)
                 .collect(Collectors.groupingBy(i -> i, Collectors.counting()));
 
@@ -274,10 +274,10 @@ public class Sudoku {
 
         return u.filter(s -> s.getPossibleValues()
                 .stream()
-                .anyMatch(p->p.isHide()))
+                .anyMatch(p->!p.getIsHidden()))
                 .sorted( (s1,s2) -> {
-                    long s1NotHiddenValues = s1.getPossibleValues().stream().filter(p->!p.isHide()).count();
-                    long s2NotHiddenValues = s2.getPossibleValues().stream().filter(p->!p.isHide()).count();
+                    long s1NotHiddenValues = s1.getPossibleValues().stream().filter(p->!p.getIsHidden()).count();
+                    long s2NotHiddenValues = s2.getPossibleValues().stream().filter(p->!p.getIsHidden()).count();
                     if (s1NotHiddenValues == s2NotHiddenValues) {
                         return 0;
                     }
@@ -320,14 +320,14 @@ public class Sudoku {
                         SudokuField f = b.getField(j1,i1);
                         SudokuField[] row = this.getRow(i*yBlockDim+i1);
                         SudokuField[] col = this.getColumn(j*xBlockDim+j1);
-                        removeValues(f, row, col, b);
+                        hideValues(f, row, col, b);
                     }
                 }
             }
         }
     }
 
-    private void removeValues(SudokuField f, SudokuField[] row, SudokuField[] col, SudokuBlock block) {
+    private void hideValues(SudokuField f, SudokuField[] row, SudokuField[] col, SudokuBlock block) {
         Stream<SudokuField> blockStream = Arrays.stream(block.getFields()).flatMap(a -> Arrays.stream(a));
         Stream<SudokuField> rowStream = Arrays.stream(row);
         Stream<SudokuField> colStream = Arrays.stream(col);
@@ -339,7 +339,7 @@ public class Sudoku {
         f.getPossibleValues()
                 .stream()
                 .filter(p -> presentValues.contains(p.getValue()))
-                .forEach(p -> p.setHide(true));
+                .forEach(p -> p.setIsHidden(true));
 
     }
 

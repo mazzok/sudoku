@@ -1,9 +1,11 @@
 <div>
   <a
     href="#"
-    *ngFor="let value of possibleValues"
-    (click)="valueClicked(value)"
+    *ngFor="let possibleValue of possibleValues"
+    (click)="valueClicked(possibleValue)"
   >
-    {{ value }}
+    <ng-container *ngIf="possibleValue.isHidden === false">
+      {{ possibleValue.value }}
+    </ng-container>
   </a>
 </div>

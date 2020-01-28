@@ -105,10 +105,10 @@ public class SudokuField {
         reactors.forEach(sf -> sf.getPossibleValues()
                 .stream()
                 .filter(p -> p.getValue()==value)
-                .forEach(p-> p.setHide(true)));
+                .forEach(p-> p.setIsHidden(true)));
         this.getBlock().getSudoku().logSolutionTrailStep(String.format("Setting Field  %s Value to %s, removing the value from columns and rows", this, value), Collections.singletonList(this), reactors );
 
-        this.getPossibleValues().forEach(p->p.setHide(true));
+        this.getPossibleValues().forEach(p->p.setIsHidden(true));
     }
 
     public boolean equalsCoordinates(int blockY, int blockX, int fieldY, int fieldX) {

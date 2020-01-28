@@ -2,7 +2,11 @@ package at.homeproductions.sudoku.model;
 
 public class PossibleValueModel {
     Integer value;
-    boolean hide;
+    boolean isHidden;
+
+    public PossibleValueModel(){
+        super();
+    }
 
     public PossibleValueModel(Integer value){
         this.value = value;
@@ -16,11 +20,11 @@ public class PossibleValueModel {
         this.value = value;
     }
 
-    public boolean isHide() {
-        return hide;
+    public boolean getIsHidden() {
+        return isHidden;
     }
 
-    public void setHide(boolean hide) {
-        this.hide = hide;
+    public void setIsHidden(boolean isHidden) {
+        this.isHidden = isHidden;
     }
 }
