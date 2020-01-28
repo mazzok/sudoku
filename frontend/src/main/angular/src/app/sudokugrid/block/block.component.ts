@@ -21,18 +21,19 @@ export class BlockComponent implements OnInit {
   }
 
   initFieldGridProperties() {
-    let x: number = 0;
-    let y: number = 0;
+    if (this.xFields.length === 0 || this.yFields.length === 0) {
+      let x: number = 0;
+      let y: number = 0;
 
-    while (x < this.block.xDim) {
-      this.xFields = this.xFields + "1fr ";
-      x++;
-    }
+      while (x < this.block.xDim) {
+        this.xFields = this.xFields + "1fr ";
+        x++;
+      }
 
-    while (y < this.block.yDim) {
-      this.yFields = this.yFields + "1fr ";
-      y++;
+      while (y < this.block.yDim) {
+        this.yFields = this.yFields + "1fr ";
+        y++;
+      }
     }
   }
-
 }
