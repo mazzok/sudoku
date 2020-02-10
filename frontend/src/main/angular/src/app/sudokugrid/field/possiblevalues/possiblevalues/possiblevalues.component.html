@@ -4,8 +4,10 @@
     *ngFor="let possibleValue of possibleValues"
     (click)="valueClicked(possibleValue)"
   >
-    <ng-container *ngIf="possibleValue.isHidden === false">
+    <span
+      [className]="possibleValue.isHidden === true ? 'isHidden' : 'choosable'"
+    >
       {{ possibleValue.value }}
-    </ng-container>
+    </span>
   </a>
 </div>

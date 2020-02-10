@@ -35,7 +35,7 @@ public class Sudoku {
         return new SudokuBlock(this,x,y,this.xBlockDim,this.yBlockDim);
     }
 
-    public void addField(int x, int y, int value) {
+    public void addStandardConfigField(int x, int y, int value) {
         int xBlockCoord = x / this.xBlocks;
         int yBlockCoord = y / this.xBlocks;
         this.blocks[yBlockCoord][xBlockCoord].addField(x % this.xBlockDim,y % this.yBlockDim, new SudokuField(this.blocks[yBlockCoord][xBlockCoord],x % this.xBlockDim,y % this.yBlockDim, value));
@@ -55,7 +55,7 @@ public class Sudoku {
 
 
 
-    private SudokuField[] getRow(int rowNum) {
+    public SudokuField[] getRow(int rowNum) {
         SudokuField[] out = new SudokuField[this.xBlockDim*this.xBlocks];
         int index = 0;
         int blockYCoord = rowNum / this.xBlockDim;
@@ -70,7 +70,7 @@ public class Sudoku {
     }
 
 
-    private SudokuField[] getColumn(int colNum) {
+    public SudokuField[] getColumn(int colNum) {
         SudokuField[] out = new SudokuField[this.yBlockDim*this.yBlocks];
         int index = 0;
         int blockYCoord = colNum / this.yBlockDim;
@@ -257,11 +257,11 @@ public class Sudoku {
                 .map(Map.Entry::getKey).findFirst().orElse(null);
     }
 
-    private int getRowIndex(SudokuField f) {
+    public int getRowIndex(SudokuField f) {
         return f.getBlock().getY()*this.yBlockDim + f.getY();
     }
 
-    private int getColIndex(SudokuField f) {
+    public int getColIndex(SudokuField f) {
         return f.getBlock().getX()*this.xBlockDim + f.getX();
     }
 
@@ -320,14 +320,14 @@ public class Sudoku {
                         SudokuField f = b.getField(j1,i1);
                         SudokuField[] row = this.getRow(i*yBlockDim+i1);
                         SudokuField[] col = this.getColumn(j*xBlockDim+j1);
-                        hideValues(f, row, col, b);
+                        removeValues(f, row, col, b);
                     }
                 }
             }
         }
     }
 
-    private void hideValues(SudokuField f, SudokuField[] row, SudokuField[] col, SudokuBlock block) {
+    private void removeValues(SudokuField f, SudokuField[] row, SudokuField[] col, SudokuBlock block) {
         Stream<SudokuField> blockStream = Arrays.stream(block.getFields()).flatMap(a -> Arrays.stream(a));
         Stream<SudokuField> rowStream = Arrays.stream(row);
         Stream<SudokuField> colStream = Arrays.stream(col);
@@ -337,9 +337,7 @@ public class Sudoku {
                 .distinct()
                 .sorted().collect(Collectors.toList());
         f.getPossibleValues()
-                .stream()
-                .filter(p -> presentValues.contains(p.getValue()))
-                .forEach(p -> p.setIsHidden(true));
+                .removeIf(p -> presentValues.contains(p.getValue()));
 
     }
 
@@ -410,5 +408,9 @@ public class Sudoku {
 
     public void setSnapshots(List<SudokuSnapshot> snapshots) {
         this.snapshots = snapshots;
+    }
+
+    public SudokuField getField(int blockX, int blockY, int x, int y) {
+        return this.blocks[blockY][blockX].getField(x, y);
     }
 }
