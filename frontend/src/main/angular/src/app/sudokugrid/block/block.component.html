@@ -7,7 +7,7 @@
     [style.grid-template-columns]="xFields"
   >
     <ng-container *ngFor="let field of block.sudokuFields">
-      <field [field]="field"></field>
+      <field [field]="field" [block]="block"></field>
     </ng-container>
   </div>
 </div>

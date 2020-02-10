@@ -39,6 +39,7 @@ public class SudokuBlockConverter extends AbstractConverter<SudokuBlockModel, Su
         sudokuBlock.setY(sudokuBlockModel.getY());
 
         sudokuBlock.setFields(new SudokuFieldConverter().toEntityList(sudokuBlockModel.getSudokuFields(), sudokuBlockModel.getxDim(), sudokuBlockModel.getyDim()));
+        Arrays.stream(sudokuBlock.getFields()).flatMap(Arrays::stream).forEach(s -> s.setBlock(sudokuBlock));
         return sudokuBlock;
     }
 

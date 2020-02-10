@@ -33,7 +33,7 @@ button {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #d63232;
+  background-color: #5da82a;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   padding: 12px 16px;

@@ -70,6 +70,10 @@ public class SudokuBlock {
         return sudoku;
     }
 
+    public void setSudoku(Sudoku sudoku) {
+        this.sudoku = sudoku;
+    }
+
     public void setFields(SudokuField[][] fields) {
         this.fields = fields;
     }
