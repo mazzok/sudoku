@@ -2,6 +2,8 @@ package at.homeproductions.sudoku.boundary;
 
 
 import at.homeproductions.sudoku.converter.SudokuConverter;
+import at.homeproductions.sudoku.entity.FieldVincinityCalculator;
+import at.homeproductions.sudoku.entity.PossibleValue;
 import at.homeproductions.sudoku.entity.Sudoku;
 import at.homeproductions.sudoku.entity.SudokuField;
 import at.homeproductions.sudoku.model.FieldValueChangedModel;
@@ -9,6 +11,8 @@ import at.homeproductions.sudoku.model.FieldValueChangedModel;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
+import java.util.stream.Stream;
 
 @Path("sudoku")
 public class SudokuResource {
@@ -75,13 +79,18 @@ public class SudokuResource {
     @Path("setfieldvalue")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response calculateCandidates(FieldValueChangedModel fieldValueChangedModel){
+    public Response setFieldValue(FieldValueChangedModel fieldValueChangedModel){
         Sudoku sudoku = new SudokuConverter().toEntity(fieldValueChangedModel.getSudokuModel());
         SudokuField f = sudoku.getField(fieldValueChangedModel.getBlockX(), fieldValueChangedModel.getBlockY(), fieldValueChangedModel.getFieldX(), fieldValueChangedModel.getFieldY());
-        SudokuField[] row = sudoku.getRow(sudoku.getRowIndex(f));
-        SudokuField[] column = sudoku.getColumn(sudoku.getColIndex(f));
-        f.setValue(fieldValueChangedModel.getValue(), row, column);
-//        sudoku.calculateCandidates();
+
+        //set field value
+        f.setValue(fieldValueChangedModel.getValue(), false);
+        //set all other field values which are set currently to the picked value to null
+        List<SudokuField> sameValueFields = FieldVincinityCalculator.getFieldsWithSameValue(f);
+        sameValueFields.stream().forEach(s -> s.setValue(null));
+        sameValueFields.stream().forEach(s -> FieldVincinityCalculator.hideOrUnhidePossibleValues(sudoku, s));
+
+        FieldVincinityCalculator.hideOrUnhidePossibleValues(sudoku, f);
         return Response.ok(new SudokuConverter().toModel(sudoku)).build();
     }
 

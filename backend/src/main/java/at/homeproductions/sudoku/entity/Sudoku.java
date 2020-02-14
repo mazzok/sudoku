@@ -94,7 +94,7 @@ public class Sudoku {
                 SudokuField[] row = getRow(this.getRowIndex(f));
                 SudokuField[] column = getColumn(this.getColIndex(f));
                 if (f.getPossibleValues().stream().filter(p->!p.getIsHidden()).count() == 1) {
-                    f.setValue(f.getPossibleValues().stream().filter(p->!p.getIsHidden()).findFirst().get().getValue(), row, column);
+                    f.setValue(f.getPossibleValues().stream().filter(p->!p.getIsHidden()).findFirst().get().getValue(),true);
                     continue;
                 } else {
                     if (trySolvingFields(Arrays.stream(f.getBlock().getFields()).flatMap(s -> Stream.of(s)).toArray(SudokuField[]::new),"block") == Boolean.TRUE
@@ -206,7 +206,7 @@ public class Sudoku {
                 SudokuField[] row = getRow(getRowIndex(fields.get(0)));
                 SudokuField[] column = getColumn(getColIndex(fields.get(0)));
                 System.out.println("solving "+fields.get(0).toString() +" with value "+singlePossibleValue);
-                fields.get(0).setValue(singlePossibleValue,row,column);
+                fields.get(0).setValue(singlePossibleValue,true);
                 return true;
             }
             return false;
@@ -328,17 +328,9 @@ public class Sudoku {
     }
 
     private void removeValues(SudokuField f, SudokuField[] row, SudokuField[] col, SudokuBlock block) {
-        Stream<SudokuField> blockStream = Arrays.stream(block.getFields()).flatMap(a -> Arrays.stream(a));
-        Stream<SudokuField> rowStream = Arrays.stream(row);
-        Stream<SudokuField> colStream = Arrays.stream(col);
-        List<Integer> presentValues = Stream.concat(Stream.concat(blockStream, rowStream), colStream)
-                .map(SudokuField::getValue)
-                .filter(i -> i != null)
-                .distinct()
-                .sorted().collect(Collectors.toList());
+        List<Integer> presentValues = FieldVincinityCalculator.getValues(f, row, col);
         f.getPossibleValues()
                 .removeIf(p -> presentValues.contains(p.getValue()));
-
     }
 
     public void logSolutionTrailStep(String message, List<SudokuField> actors, List<SudokuField> reactors) {

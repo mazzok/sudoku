@@ -1,12 +1,10 @@
 package at.homeproductions.sudoku.entity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class SudokuField {
 
@@ -95,21 +93,23 @@ public class SudokuField {
         this.y = y;
     }
 
-    public void setValue(Integer value, SudokuField[] row, SudokuField[] column) {
+    public void setValue(Integer value, boolean hideOwnPossibleValues) {
         this.value = value;
         System.out.println("Setting Value to "+value);
-        List<SudokuField> reactors = Stream.concat( Stream.of(this.block.getFields()).flatMap(s -> Stream.of(s)) ,
-                Stream.concat(Arrays.stream(row),Arrays.stream(column)))
-                .distinct().collect(Collectors.toList());
+        List<SudokuField> reactors = FieldVincinityCalculator.getPossibleFieldVincinityReactors(this);
 
-        reactors.forEach(sf -> sf.getPossibleValues()
-                .stream()
+        reactors.stream()
+                .map(SudokuField::getPossibleValues)
+                .forEach(s-> s.stream()
                 .filter(p -> p.getValue()==value)
                 .forEach(p-> p.setIsHidden(true)));
         this.getBlock().getSudoku().logSolutionTrailStep(String.format("Setting Field  %s Value to %s, removing the value from columns and rows", this, value), Collections.singletonList(this), reactors );
 
-        this.getPossibleValues().forEach(p->p.setIsHidden(true));
+        if (hideOwnPossibleValues) {
+            this.getPossibleValues().forEach(p->p.setIsHidden(true));
+        }
     }
+
 
     public boolean equalsCoordinates(int blockY, int blockX, int fieldY, int fieldX) {
         return blockY == block.y && blockX == block.x && fieldY == y && fieldX == x;
