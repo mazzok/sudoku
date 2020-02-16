@@ -9,26 +9,26 @@ public class main {
 
         Sudoku s = new Sudoku();
 
-        s.addStandardConfigField(1,0,3);
-        s.addStandardConfigField(3,1,1);
-        s.addStandardConfigField(4,1,9);
-        s.addStandardConfigField(5,1,5);
-        s.addStandardConfigField(2,2,8);
-        s.addStandardConfigField(7,2,6);
-        s.addStandardConfigField(0,3,8);
-        s.addStandardConfigField(4,3,6);
-        s.addStandardConfigField(0,4,4);
-        s.addStandardConfigField(3,4,8);
-        s.addStandardConfigField(8,4,1);
-        s.addStandardConfigField(4,5,2);
-        s.addStandardConfigField(1,6,6);
-        s.addStandardConfigField(6,6,2);
-        s.addStandardConfigField(7,6,8);
-        s.addStandardConfigField(3,7,4);
-        s.addStandardConfigField(4,7,1);
-        s.addStandardConfigField(5,7,9);
-        s.addStandardConfigField(8,7,5);
-        s.addStandardConfigField(7,8,7);
+        s.addInitialField(1,0,3);
+        s.addInitialField(3,1,1);
+        s.addInitialField(4,1,9);
+        s.addInitialField(5,1,5);
+        s.addInitialField(2,2,8);
+        s.addInitialField(7,2,6);
+        s.addInitialField(0,3,8);
+        s.addInitialField(4,3,6);
+        s.addInitialField(0,4,4);
+        s.addInitialField(3,4,8);
+        s.addInitialField(8,4,1);
+        s.addInitialField(4,5,2);
+        s.addInitialField(1,6,6);
+        s.addInitialField(6,6,2);
+        s.addInitialField(7,6,8);
+        s.addInitialField(3,7,4);
+        s.addInitialField(4,7,1);
+        s.addInitialField(5,7,9);
+        s.addInitialField(8,7,5);
+        s.addInitialField(7,8,7);
 
 
         Long l = System.currentTimeMillis();

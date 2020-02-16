@@ -16,9 +16,18 @@ button {
   border: 0px;
 }
 
-.dropbtn {
-  background-color: #c2c9c2;
+.isInitialField {
+  background-color: #96ad96;
   color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.isNotInitialField {
+  background-color: #c2c9c2;
+  color: rgb(255, 255, 255);
   padding: 16px;
   font-size: 16px;
   border: none;

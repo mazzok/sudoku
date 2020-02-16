@@ -10,6 +10,7 @@ public class SudokuField {
 
     protected SudokuBlock block;
     protected Integer value;
+    protected boolean isInitialField;
 
     protected List<PossibleValue> possibleValues = new ArrayList<>();
     protected int x;
@@ -91,6 +92,14 @@ public class SudokuField {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public boolean getIsInitialField() {
+        return isInitialField;
+    }
+
+    public void setIsInitialField(boolean initialField) {
+        this.isInitialField = initialField;
     }
 
     public void setValue(Integer value, boolean hideOwnPossibleValues) {

@@ -35,10 +35,12 @@ public class Sudoku {
         return new SudokuBlock(this,x,y,this.xBlockDim,this.yBlockDim);
     }
 
-    public void addStandardConfigField(int x, int y, int value) {
+    public void addInitialField(int x, int y, int value) {
         int xBlockCoord = x / this.xBlocks;
         int yBlockCoord = y / this.xBlocks;
-        this.blocks[yBlockCoord][xBlockCoord].addField(x % this.xBlockDim,y % this.yBlockDim, new SudokuField(this.blocks[yBlockCoord][xBlockCoord],x % this.xBlockDim,y % this.yBlockDim, value));
+        SudokuField field = new SudokuField(this.blocks[yBlockCoord][xBlockCoord],x % this.xBlockDim,y % this.yBlockDim, value);
+        field.setIsInitialField(true);
+        this.blocks[yBlockCoord][xBlockCoord].addField(x % this.xBlockDim,y % this.yBlockDim, field);
         calculateCandidates();
     }
 

@@ -10,6 +10,7 @@ public class SudokuFieldModel {
     private int y;
     private Integer value;
     private List<PossibleValueModel> possibleValues;
+    private boolean isInitialField;
 
     public int getX() {
         return x;
@@ -41,5 +42,13 @@ public class SudokuFieldModel {
 
     public void setPossibleValues(List<PossibleValueModel> possibleValues) {
         this.possibleValues = possibleValues;
+    }
+
+    public boolean getIsInitialField() {
+        return isInitialField;
+    }
+
+    public void setIsInitialField(boolean initialField) {
+        this.isInitialField = initialField;
     }
 }

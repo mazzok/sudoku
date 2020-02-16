@@ -14,6 +14,7 @@ public class SudokuFieldConverter extends AbstractConverter<SudokuFieldModel, Su
         sudokuField.setX(model.getX());
         sudokuField.setY(model.getY());
         sudokuField.setValue(model.getValue());
+        sudokuField.setIsInitialField(model.getIsInitialField());
         sudokuField.setPossibleValues(new PossibleValueConverter().toEntityList(model.getPossibleValues()));
         return sudokuField;
     }
@@ -24,6 +25,7 @@ public class SudokuFieldConverter extends AbstractConverter<SudokuFieldModel, Su
         sudokuFieldModel.setX(entity.getX());
         sudokuFieldModel.setY(entity.getY());
         sudokuFieldModel.setValue(entity.getValue());
+        sudokuFieldModel.setIsInitialField(entity.getIsInitialField());
         sudokuFieldModel.setPossibleValues(new PossibleValueConverter().toModelList(entity.getPossibleValues()));
         return sudokuFieldModel;
     }

@@ -1,7 +1,14 @@
 <div class="field-style dropdown" (click)="onFieldClick()">
-  <button type="button" class="dropbtn">
-    {{ field.value }}
-  </button>
+  <ng-container *ngIf="field.isInitialField === true; else notInitialField">
+    <button type="button" class="isInitialField">
+      {{ field.value }}
+    </button>
+  </ng-container>
+  <ng-template #notInitialField>
+    <button type="button" class="isNotInitialField">
+      {{ field.value }}
+    </button>
+  </ng-template>
   <ng-container *ngIf="field.possibleValues.length > 0">
     <div class="dropdown-content">
       <p>
