@@ -13,7 +13,7 @@ public class FieldVincinityCalculator {
                 .collect(Collectors.toList());
     }
 
-    public static List<SudokuField> getFieldVincinityReactors(SudokuField field) {
+    public  static List<SudokuField> getFieldVincinityReactors(SudokuField field) {
         SudokuField[] row = field.getBlock().getSudoku().getRow(field.getBlock().getSudoku().getRowIndex(field));
         SudokuField[] column = field.getBlock().getSudoku().getColumn(field.getBlock().getSudoku().getColIndex(field));
 

@@ -1,47 +1,30 @@
 package at.homeproductions.sudoku.entity;
 
+import at.homeproductions.sudoku.entity.snapshot.SudokuSnapshot;
+import at.homeproductions.sudoku.entity.snapshot.SudokuSnapshotField;
+
 import java.util.*;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Sudoku {
-
-
-    protected int yBlockDim;
-    protected int xBlockDim;
-    protected SudokuBlock[][] blocks;
-    protected int xBlocks;
-    protected int yBlocks;
+public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
+    //
+//
+//    protected int yBlockDim;
+//    protected int xBlockDim;
+//    protected SudokuBlock[][] blocks;
+//    protected int xBlocks;
+//    protected int yBlocks;
     private List<SudokuSnapshot> snapshots;
 
     public Sudoku() {
+        super();
         this.snapshots = new ArrayList<>();
-        this.xBlocks = 3;
-        this.yBlocks = 3;
-
-        this.xBlockDim = 3;
-        this.yBlockDim = 3;
-
-        this.blocks = new SudokuBlock[this.yBlockDim][this.xBlocks];
-        for(int y = 0; y < yBlocks; y++) {
-            for (int x = 0; x < xBlocks; x++) {
-                this.blocks[y][x] = createField(y, x);
-            }
-        }
     }
 
-    protected SudokuBlock createField(int y, int x) {
+    @Override
+    protected SudokuBlock createSudokuBlock(int y, int x) {
         return new SudokuBlock(this,x,y,this.xBlockDim,this.yBlockDim);
-    }
-
-    public void addInitialField(int x, int y, int value) {
-        int xBlockCoord = x / this.xBlocks;
-        int yBlockCoord = y / this.xBlocks;
-        SudokuField field = new SudokuField(this.blocks[yBlockCoord][xBlockCoord],x % this.xBlockDim,y % this.yBlockDim, value);
-        field.setIsInitialField(true);
-        this.blocks[yBlockCoord][xBlockCoord].addField(x % this.xBlockDim,y % this.yBlockDim, field);
-        calculateCandidates();
     }
 
     @Override
@@ -56,34 +39,24 @@ public class Sudoku {
     }
 
 
-
-    public SudokuField[] getRow(int rowNum) {
-        SudokuField[] out = new SudokuField[this.xBlockDim*this.xBlocks];
-        int index = 0;
-        int blockYCoord = rowNum / this.xBlockDim;
-        for (int i = 0; i < this.xBlocks; i++) {
-            SudokuBlock block = this.blocks[blockYCoord][i];
-            for (int j = 0; j < block.getXDim();j++) {
-                SudokuField field = block.getField(j,rowNum % this.xBlockDim);
-                out[index++] = field;
-            }
-        }
-        return out;
+    public void addInitialField(int x, int y, int value) {
+        int xBlockCoord = x / this.xBlocks;
+        int yBlockCoord = y / this.xBlocks;
+        SudokuField field = new SudokuField(this.blocks[yBlockCoord][xBlockCoord],x % this.xBlockDim,y % this.yBlockDim, value);
+        field.setIsInitialField(true);
+        this.blocks[yBlockCoord][xBlockCoord].addField(x % this.xBlockDim,y % this.yBlockDim, field);
+        calculateCandidates();
     }
 
 
-    public SudokuField[] getColumn(int colNum) {
-        SudokuField[] out = new SudokuField[this.yBlockDim*this.yBlocks];
-        int index = 0;
-        int blockYCoord = colNum / this.yBlockDim;
-        for (int i = 0; i < this.yBlocks; i++) {
-            SudokuBlock block = this.blocks[i][blockYCoord];
-            for (int j = 0; j < block.getYDim();j++) {
-                SudokuField field = block.getField(colNum % this.yBlockDim, j);
-                out[index++] = field;
-            }
-        }
-        return out;
+    @Override
+    protected Class<SudokuField> getFieldClass() {
+        return SudokuField.class;
+    }
+
+    @Override
+    protected Class<SudokuBlock> getBlockClass() {
+        return SudokuBlock.class;
     }
 
     public void solve() {
@@ -259,14 +232,6 @@ public class Sudoku {
                 .map(Map.Entry::getKey).findFirst().orElse(null);
     }
 
-    public int getRowIndex(SudokuField f) {
-        return f.getBlock().getY()*this.yBlockDim + f.getY();
-    }
-
-    public int getColIndex(SudokuField f) {
-        return f.getBlock().getX()*this.xBlockDim + f.getX();
-    }
-
     private List<SudokuField> sortFieldsByPossibleValues() {
         Stream<SudokuBlock> l = Arrays.stream(this.blocks).flatMap(b -> Stream.of(b));
         Stream<SudokuField[][]> j = l.map(b -> b.getFields());
@@ -288,29 +253,6 @@ public class Sudoku {
                     }
                     return 1;
                 } ).collect(Collectors.toList());
-    }
-
-    private void compareColsAndRows() {
-        SudokuField[][] s1 = new SudokuField[9][9];
-        SudokuField[][] s2 = new SudokuField[9][9];
-        for (int i = 0; i  < 9;i++) {
-            SudokuField[] row = getRow(i);
-            SudokuField[] col = getColumn(i);
-            s1[i] = row;
-            for (int k =0; k < 9;k++) {
-                s2[k][i] = col[k];
-            }
-        }
-
-        boolean valid = true;
-        for (int i = 0; i < 9;i++) {
-            for (int j = 0; j < 9;j++) {
-                valid = valid && s1[i][j].getValue() == s2[i][j].getValue();
-            }
-        }
-
-        System.out.println(valid);
-
     }
 
     public void calculateCandidates() {
@@ -337,10 +279,12 @@ public class Sudoku {
 
     public void logSolutionTrailStep(String message, List<SudokuField> actors, List<SudokuField> reactors) {
 
-        SudokuSnapshot snapshot = new SudokuSnapshot(message,
-                actors.stream().map(s -> SudokuSnapshotField.asActor(s) ).collect(Collectors.toList()),
-                reactors.stream().map(s -> SudokuSnapshotField.asReactor(s) ).collect(Collectors.toList()),
-                this);
+//        SudokuSnapshot snapshot = new SudokuSnapshot(message,
+//                actors.stream().map(s -> SudokuSnapshotField.asActor(s) ).collect(Collectors.toList()),
+//                reactors.stream().map(s -> SudokuSnapshotField.asReactor(s) ).collect(Collectors.toList()),
+//                this);
+
+        SudokuSnapshot snapshot = new SudokuSnapshot(message,actors, reactors, this);
 
         this.snapshots.add(snapshot);
     }
@@ -356,55 +300,11 @@ public class Sudoku {
         }
     }
 
-    public int getyBlockDim() {
-        return yBlockDim;
-    }
-
-    public int getxBlockDim() {
-        return xBlockDim;
-    }
-
-    public void setyBlockDim(int yBlockDim) {
-        this.yBlockDim = yBlockDim;
-    }
-
-    public void setxBlockDim(int xBlockDim) {
-        this.xBlockDim = xBlockDim;
-    }
-
-    public SudokuBlock[][] getBlocks() {
-        return blocks;
-    }
-
-    public void setBlocks(SudokuBlock[][] blocks) {
-        this.blocks = blocks;
-    }
-
-    public int getxBlocks() {
-        return xBlocks;
-    }
-
-    public void setxBlocks(int xBlocks) {
-        this.xBlocks = xBlocks;
-    }
-
-    public int getyBlocks() {
-        return yBlocks;
-    }
-
-    public void setyBlocks(int yBlocks) {
-        this.yBlocks = yBlocks;
-    }
-
     public List<SudokuSnapshot> getSnapshots() {
         return snapshots;
     }
 
     public void setSnapshots(List<SudokuSnapshot> snapshots) {
         this.snapshots = snapshots;
-    }
-
-    public SudokuField getField(int blockX, int blockY, int x, int y) {
-        return this.blocks[blockY][blockX].getField(x, y);
     }
 }

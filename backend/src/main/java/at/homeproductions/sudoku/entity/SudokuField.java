@@ -6,15 +6,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class SudokuField {
+public class SudokuField extends AbstractSudokuField<SudokuBlock>{
 
-    protected SudokuBlock block;
-    protected Integer value;
     protected boolean isInitialField;
-
-    protected List<PossibleValue> possibleValues = new ArrayList<>();
-    protected int x;
-    protected int y;
 
     public SudokuField() {
         super();
@@ -22,25 +16,13 @@ public class SudokuField {
 
 
     public SudokuField(SudokuBlock block, int x, int y, Integer value) {
-        this(block,x,y);
-        this.value = value;
-
-        if (this.value != null) {
-            this.possibleValues.clear();
-        }
-//        else {
-//            this.possibleValues.remove(value);
-//        }
+        super(block,x,y,value);
     }
 
 
     public SudokuField(SudokuBlock block, int x, int y) {
-        super();
-        this.block = block;
-        this.x = x;
-        this.y = y;
+        super(block,x,y);
         initPossibleValues();
-
     }
 
 
@@ -48,50 +30,10 @@ public class SudokuField {
         this.possibleValues = IntStream.rangeClosed(1,9).boxed().map(PossibleValue::new).collect(Collectors.toList());
     }
 
-    public Integer getValue() {
-        return value;
-    }
-
     @Override
     public String toString() {
         return "field ["+getX()+","+getY()+"] " +
                 "in block ["+getBlock().getX()+","+getBlock().getY()+"] with value: " + String.valueOf(this.getValue());
-    }
-
-    public List<PossibleValue> getPossibleValues() {
-        return this.possibleValues;
-    }
-
-    public SudokuBlock getBlock() {
-        return this.block;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setBlock(SudokuBlock block) {
-        this.block = block;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
-    }
-
-    public void setPossibleValues(List<PossibleValue> possibleValues) {
-        this.possibleValues = possibleValues;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 
     public boolean getIsInitialField() {
@@ -110,8 +52,8 @@ public class SudokuField {
         reactors.stream()
                 .map(SudokuField::getPossibleValues)
                 .forEach(s-> s.stream()
-                .filter(p -> p.getValue()==value)
-                .forEach(p-> p.setIsHidden(true)));
+                        .filter(p -> p.getValue()==value)
+                        .forEach(p-> p.setIsHidden(true)));
         this.getBlock().getSudoku().logSolutionTrailStep(String.format("Setting Field  %s Value to %s, removing the value from columns and rows", this, value), Collections.singletonList(this), reactors );
 
         if (hideOwnPossibleValues) {
@@ -119,8 +61,4 @@ public class SudokuField {
         }
     }
 
-
-    public boolean equalsCoordinates(int blockY, int blockX, int fieldY, int fieldX) {
-        return blockY == block.y && blockX == block.x && fieldY == y && fieldX == x;
-    }
 }
