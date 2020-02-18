@@ -10,10 +10,13 @@ import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { ButtonsModule } from "ngx-bootstrap/buttons";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { PossibleValuesComponent } from "./field/possiblevalues/possiblevalues/possiblevalues.component";
+import { GridHintComponent } from "./grid-hint/grid-hint.component";
+import { HelpMeService } from "./services/sudokuhelpme.service";
 
 @NgModule({
   declarations: [
     GridComponent,
+    GridHintComponent,
     BlockComponent,
     FieldComponent,
     PossibleValuesComponent
@@ -25,6 +28,7 @@ import { PossibleValuesComponent } from "./field/possiblevalues/possiblevalues/p
     ButtonsModule.forRoot(),
     BrowserAnimationsModule
   ],
-  providers: [SudokuService]
+  exports: [GridComponent, GridHintComponent],
+  providers: [SudokuService, HelpMeService]
 })
 export class SudokugridModule {}

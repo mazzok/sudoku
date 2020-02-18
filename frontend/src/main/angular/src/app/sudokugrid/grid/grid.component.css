@@ -1,7 +1,28 @@
 .blockgrid {
-  width: 600px;
+  /* width: 600px; */
+  /* height: 450px; */
   background-color: #444;
   display: grid;
   grid-gap: 5px;
   /* grid-auto-flow: row; */
+}
+
+.blockgrid::before {
+  content: "";
+  width: 0;
+  padding-bottom: 100%;
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
+
+.blockgrid > *:first-child {
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
+
+/* Just to make the grid visible */
+
+.blockgrid > * {
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px white solid;
 }

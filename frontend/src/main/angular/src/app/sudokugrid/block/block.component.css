@@ -14,3 +14,23 @@
   /* padding: 20px; */
   font-size: 150%;
 }
+
+.fieldgrid::before {
+  content: "";
+  width: 0;
+  padding-bottom: 100%;
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
+
+.fieldgrid > *:first-child {
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
+
+/* Just to make the grid visible */
+
+.fieldgrid > * {
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px white solid;
+}

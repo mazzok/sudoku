@@ -2,10 +2,12 @@ package at.homeproductions.sudoku.boundary;
 
 
 import at.homeproductions.sudoku.converter.SudokuConverter;
+import at.homeproductions.sudoku.converter.SudokuSnapshotConverter;
 import at.homeproductions.sudoku.entity.FieldVincinityCalculator;
 import at.homeproductions.sudoku.entity.Sudoku;
 import at.homeproductions.sudoku.entity.SudokuField;
 import at.homeproductions.sudoku.model.FieldValueChangedModel;
+import at.homeproductions.sudoku.model.SudokuModel;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -16,9 +18,10 @@ import java.util.List;
 public class SudokuResource {
 
     @Path("solve")
-    @GET
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response solve() {
+    public Response solve(SudokuModel sudoku) {
         Sudoku s = new Sudoku();
         s.addInitialField(1,0,3);
         s.addInitialField(3,1,1);
@@ -42,7 +45,8 @@ public class SudokuResource {
         s.addInitialField(7,8,7);
 
         s.solve();
-        return Response.ok(new SudokuConverter().toModel(s)).build();
+
+        return Response.ok(new SudokuSnapshotConverter().toModel(s.getSnapshots().get(0))).build();
     }
 
     @GET
