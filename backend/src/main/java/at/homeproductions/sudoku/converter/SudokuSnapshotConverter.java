@@ -12,15 +12,16 @@ public class SudokuSnapshotConverter extends AbstractConverter<SudokuSnapshotMod
 
     @Override
     public SudokuSnapshotModel toModel(SudokuSnapshot entity) {
-        SudokuSnapshotModel sudokuSnapshotModel = new SudokuSnapshotModel();
-        sudokuSnapshotModel.setxDim(entity.getxBlockDim());
-        sudokuSnapshotModel.setyDim(entity.getyBlockDim());
+        SudokuSnapshotModel model = new SudokuSnapshotModel();
+        model.setxDim(entity.getxBlockDim());
+        model.setyDim(entity.getyBlockDim());
+        model.setMessage(entity.getMessage());
 
-        sudokuSnapshotModel.setSudokuBlocks(new SudokuSnapshotBlockConverter().toModelList(Arrays.stream(entity.getBlocks())
+        model.setSudokuBlocks(new SudokuSnapshotBlockConverter().toModelList(Arrays.stream(entity.getBlocks())
                 .flatMap(Arrays::stream)
                 .collect(Collectors.toList())));
 
-        return sudokuSnapshotModel;
+        return model;
     }
 
     @Override
@@ -35,13 +36,14 @@ public class SudokuSnapshotConverter extends AbstractConverter<SudokuSnapshotMod
 
     @Override
     public SudokuSnapshot toEntity(SudokuSnapshotModel model) {
-        SudokuSnapshot sudoku = new SudokuSnapshot();
-        sudoku.setxBlockDim(model.getxDim());
-        sudoku.setyBlockDim(model.getyDim());
+        SudokuSnapshot entity = new SudokuSnapshot();
+        entity.setxBlockDim(model.getxDim());
+        entity.setyBlockDim(model.getyDim());
+        entity.setMessage(model.getMessage());
 
-        sudoku.setBlocks(new SudokuSnapshotBlockConverter().toEntityList(model.getSudokuBlocks(), model.getxDim(), model.getyDim()));
-        Arrays.stream(sudoku.getBlocks()).flatMap(Arrays::stream).forEach(s -> s.setSudoku(sudoku));
-        return sudoku;
+        entity.setBlocks(new SudokuSnapshotBlockConverter().toEntityList(model.getSudokuBlocks(), model.getxDim(), model.getyDim()));
+        Arrays.stream(entity.getBlocks()).flatMap(Arrays::stream).forEach(s -> s.setSudoku(entity));
+        return entity;
     }
 
 }

@@ -1,8 +1,9 @@
 .field-style {
   height: 100%;
   width: 100%;
-  background-color: rgb(194, 189, 189);
-  color: #fff;
+  background-color: rgba(194, 189, 189, 0.658);
+  /* background-color: rgb(250, 6, 144); */
+  /* color: rgb(245, 13, 13); */
   border-radius: 0.5px;
   padding: 2px;
 }
@@ -17,19 +18,29 @@ button {
 }
 
 .isInitialField {
-  background-color: #96ad96;
+  background-color: rgb(145, 145, 145);
   color: white;
-  /* padding: 16px; */
-  /* font-size: 16px; */
   border: none;
   cursor: pointer;
 }
 
 .isNotInitialField {
-  background-color: #c2c9c2;
+  background-color: rgb(170, 170, 170);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.isReactorField {
+  background-color: lightblue;
   color: rgb(255, 255, 255);
-  /* padding: 16px; */
-  /* font-size: 16px; */
+  border: none;
+  cursor: pointer;
+}
+
+.isActorField {
+  background-color: lightskyblue;
+  color: rgb(255, 255, 255);
   border: none;
   cursor: pointer;
 }

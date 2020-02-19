@@ -8,6 +8,8 @@ public class SudokuSnapshotModel {
 
     private int yDim;
 
+    private String message;
+
     private List<SudokuSnapshotBlockModel> sudokuBlocks;
 
     public int getxDim() {
@@ -32,5 +34,13 @@ public class SudokuSnapshotModel {
 
     public void setSudokuBlocks(List<SudokuSnapshotBlockModel> sudokuBlocks) {
         this.sudokuBlocks = sudokuBlocks;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

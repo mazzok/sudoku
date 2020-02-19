@@ -1,7 +1,7 @@
 <ng-container *ngIf="sudokuSnapshot">
   <div class="grid">
-    <div><grid></grid></div>
-    <div></div>
+    <div><grid [sudokusnapshot]="sudokuSnapshot"></grid></div>
+    <div>{{ sudokuSnapshot.message }}</div>
     <div></div>
     <div></div>
   </div>

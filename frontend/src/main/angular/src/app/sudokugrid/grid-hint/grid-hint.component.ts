@@ -25,9 +25,10 @@ export class GridHintComponent implements OnInit, OnDestroy {
   }
 
   private helpMeWithSudoku(sudokuModel: SudokuModel): void {
-    this.sudokuService
-      .solveSudoku(sudokuModel)
-      .subscribe(result => (this.sudokuSnapshot = result));
+    this.sudokuService.solveSudoku(sudokuModel).subscribe(result => {
+      console.log("received data from sudoku service");
+      this.sudokuSnapshot = result;
+    });
   }
 
   ngOnDestroy() {

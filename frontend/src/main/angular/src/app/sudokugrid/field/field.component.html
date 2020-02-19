@@ -1,23 +1,59 @@
 <div class="field-style dropdown" (click)="onFieldClick()">
-  <ng-container *ngIf="field.isInitialField === true; else notInitialField">
-    <button type="button" class="isInitialField">
-      {{ field.value }}
-    </button>
+  <ng-container *ngIf="field">
+    <ng-container *ngIf="field.isInitialField">
+      <button type="button" class="isInitialField">
+        {{ field.value }}
+      </button>
+    </ng-container>
+    <ng-container *ngIf="!field.isInitialField">
+      <button type="button" class="isNotInitialField">
+        {{ field.value }}
+      </button>
+    </ng-container>
   </ng-container>
-  <ng-template #notInitialField>
-    <button type="button" class="isNotInitialField">
-      {{ field.value }}
-    </button>
-  </ng-template>
-  <ng-container *ngIf="field.possibleValues.length > 0">
+  <ng-container *ngIf="snapshotfield">
+    <ng-container *ngIf="snapshotfield.isActor">
+      <button type="button" class="isActorField">
+        {{ snapshotfield.value }}
+      </button>
+    </ng-container>
+    <ng-container *ngIf="snapshotfield.isReactor">
+      <button type="button" class="isReactorField">
+        {{ snapshotfield.value }}
+      </button>
+    </ng-container>
+    <ng-container *ngIf="!snapshotfield.isActor && !snapshotfield.isReactor">
+      <button type="button" class="isNotInitialField">
+        {{ snapshotfield.value }}
+      </button>
+    </ng-container>
+  </ng-container>
+  <ng-container
+    *ngIf="
+      (field && block && field.possibleValues.length > 0) ||
+      (snapshotfield &&
+        snapshotblock &&
+        snapshotfield.possibleValues.length > 0)
+    "
+  >
     <div class="dropdown-content">
-      <p>
-        <possiblevalues
-          [possibleValues]="field.possibleValues"
-          [field]="field"
-          [block]="block"
-        ></possiblevalues>
-      </p>
+      <ng-container *ngIf="field && block">
+        <p>
+          <possiblevalues
+            [possibleValues]="field.possibleValues"
+            [field]="field"
+            [block]="block"
+          ></possiblevalues>
+        </p>
+      </ng-container>
+
+      <ng-container *ngIf="snapshotfield && snapshotblock">
+        <p>
+          <possiblevalues
+            [possibleValues]="snapshotfield.possibleValues"
+          ></possiblevalues>
+        </p>
+      </ng-container>
     </div>
   </ng-container>
 </div>

@@ -10,14 +10,14 @@ public class SudokuBlockConverter extends AbstractConverter<SudokuBlockModel, Su
 
     @Override
     public SudokuBlockModel toModel(SudokuBlock entity) {
-        SudokuBlockModel sudokuBlockModel = new SudokuBlockModel();
-        sudokuBlockModel.setxDim(entity.getXDim());
-        sudokuBlockModel.setyDim(entity.getYDim());
-        sudokuBlockModel.setX(entity.getX());
-        sudokuBlockModel.setY(entity.getY());
-        sudokuBlockModel.setSudokuFields(new SudokuFieldConverter().toModelList(
+        SudokuBlockModel model = new SudokuBlockModel();
+        model.setxDim(entity.getXDim());
+        model.setyDim(entity.getYDim());
+        model.setX(entity.getX());
+        model.setY(entity.getY());
+        model.setSudokuFields(new SudokuFieldConverter().toModelList(
                 Arrays.stream(entity.getFields()).flatMap(Arrays::stream).collect(Collectors.toList())));
-        return sudokuBlockModel;
+        return model;
     }
 
     @Override
@@ -32,15 +32,15 @@ public class SudokuBlockConverter extends AbstractConverter<SudokuBlockModel, Su
 
     @Override
     public SudokuBlock toEntity(SudokuBlockModel sudokuBlockModel) {
-        SudokuBlock sudokuBlock = new SudokuBlock();
-        sudokuBlock.setxDim(sudokuBlockModel.getxDim());
-        sudokuBlock.setyDim(sudokuBlockModel.getyDim());
-        sudokuBlock.setX(sudokuBlockModel.getX());
-        sudokuBlock.setY(sudokuBlockModel.getY());
+        SudokuBlock entity = new SudokuBlock();
+        entity.setxDim(sudokuBlockModel.getxDim());
+        entity.setyDim(sudokuBlockModel.getyDim());
+        entity.setX(sudokuBlockModel.getX());
+        entity.setY(sudokuBlockModel.getY());
 
-        sudokuBlock.setFields(new SudokuFieldConverter().toEntityList(sudokuBlockModel.getSudokuFields(), sudokuBlockModel.getxDim(), sudokuBlockModel.getyDim()));
-        Arrays.stream(sudokuBlock.getFields()).flatMap(Arrays::stream).forEach(s -> s.setBlock(sudokuBlock));
-        return sudokuBlock;
+        entity.setFields(new SudokuFieldConverter().toEntityList(sudokuBlockModel.getSudokuFields(), sudokuBlockModel.getxDim(), sudokuBlockModel.getyDim()));
+        Arrays.stream(entity.getFields()).flatMap(Arrays::stream).forEach(s -> s.setBlock(entity));
+        return entity;
     }
 
 }

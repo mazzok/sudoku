@@ -1,11 +1,19 @@
-<ng-container *ngIf="sudoku">
+<ng-container *ngIf="sudokumodel || sudokusnapshotmodel">
   <div
     class="blockgrid"
     [style.grid-template-rows]="yBlocks"
     [style.grid-template-columns]="xBlocks"
   >
-    <ng-container *ngFor="let block of sudoku.sudokuBlocks">
-      <block [block]="block"></block>
+    <ng-container *ngIf="sudokumodel">
+      <ng-container *ngFor="let block of sudokumodel.sudokuBlocks">
+        <block [block]="block"></block>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="sudokusnapshotmodel">
+      <ng-container *ngFor="let block of sudokusnapshotmodel.sudokuBlocks">
+        <block [snapshotblock]="block"></block>
+      </ng-container>
     </ng-container>
   </div>
 </ng-container>

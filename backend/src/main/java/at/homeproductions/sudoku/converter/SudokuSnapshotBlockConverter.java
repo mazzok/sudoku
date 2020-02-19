@@ -12,14 +12,14 @@ public class SudokuSnapshotBlockConverter extends AbstractConverter<SudokuSnapsh
 
     @Override
     public SudokuSnapshotBlockModel toModel(SudokuSnapshotBlock entity) {
-        SudokuSnapshotBlockModel sudokuSnapshotBlockModel = new SudokuSnapshotBlockModel();
-        sudokuSnapshotBlockModel.setxDim(entity.getXDim());
-        sudokuSnapshotBlockModel.setyDim(entity.getYDim());
-        sudokuSnapshotBlockModel.setX(entity.getX());
-        sudokuSnapshotBlockModel.setY(entity.getY());
-        sudokuSnapshotBlockModel.setSudokuFields(new SudokuSnapshotFieldConverter().toModelList(
+        SudokuSnapshotBlockModel model = new SudokuSnapshotBlockModel();
+        model.setxDim(entity.getXDim());
+        model.setyDim(entity.getYDim());
+        model.setX(entity.getX());
+        model.setY(entity.getY());
+        model.setSudokuFields(new SudokuSnapshotFieldConverter().toModelList(
                 Arrays.stream(entity.getFields()).flatMap(Arrays::stream).collect(Collectors.toList())));
-        return sudokuSnapshotBlockModel;
+        return model;
     }
 
     @Override
@@ -34,15 +34,15 @@ public class SudokuSnapshotBlockConverter extends AbstractConverter<SudokuSnapsh
 
     @Override
     public SudokuSnapshotBlock toEntity(SudokuSnapshotBlockModel sudokuSnapshotBlockModel) {
-        SudokuSnapshotBlock sudokuSnapshotBlock = new SudokuSnapshotBlock();
-        sudokuSnapshotBlock.setxDim(sudokuSnapshotBlockModel.getxDim());
-        sudokuSnapshotBlock.setyDim(sudokuSnapshotBlockModel.getyDim());
-        sudokuSnapshotBlock.setX(sudokuSnapshotBlockModel.getX());
-        sudokuSnapshotBlock.setY(sudokuSnapshotBlockModel.getY());
+        SudokuSnapshotBlock entity = new SudokuSnapshotBlock();
+        entity.setxDim(sudokuSnapshotBlockModel.getxDim());
+        entity.setyDim(sudokuSnapshotBlockModel.getyDim());
+        entity.setX(sudokuSnapshotBlockModel.getX());
+        entity.setY(sudokuSnapshotBlockModel.getY());
 
-        sudokuSnapshotBlock.setFields(new SudokuSnapshotFieldConverter().toEntityList(sudokuSnapshotBlockModel.getSudokuFields(), sudokuSnapshotBlockModel.getxDim(), sudokuSnapshotBlockModel.getyDim()));
-        Arrays.stream(sudokuSnapshotBlock.getFields()).flatMap(Arrays::stream).forEach(s -> s.setBlock(sudokuSnapshotBlock));
-        return sudokuSnapshotBlock;
+        entity.setFields(new SudokuSnapshotFieldConverter().toEntityList(sudokuSnapshotBlockModel.getSudokuFields(), sudokuSnapshotBlockModel.getxDim(), sudokuSnapshotBlockModel.getyDim()));
+        Arrays.stream(entity.getFields()).flatMap(Arrays::stream).forEach(s -> s.setBlock(entity));
+        return entity;
     }
 
 }

@@ -1,13 +1,26 @@
 <!-- ({{ block.x }},{{ block.y }}) -->
 <!-- <p>{{ yFields }}, {{ xFields }}</p> -->
-<div class="block-style">
-  <div
-    class="fieldgrid"
-    [style.grid-template-rows]="yFields"
-    [style.grid-template-columns]="xFields"
-  >
-    <ng-container *ngFor="let field of block.sudokuFields">
-      <field [field]="field" [block]="block"></field>
-    </ng-container>
+<ng-container *ngIf="blockModel || blockSnapshotModel">
+  <div class="block-style">
+    <div
+      class="fieldgrid"
+      [style.grid-template-rows]="yFields"
+      [style.grid-template-columns]="xFields"
+    >
+      <ng-container *ngIf="blockModel">
+        <ng-container *ngFor="let field of blockModel.sudokuFields">
+          <field [field]="field" [block]="blockModel"></field>
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="blockSnapshotModel">
+        <ng-container *ngFor="let field of blockSnapshotModel.sudokuFields">
+          <field
+            [snapshotfield]="field"
+            [snapshotblock]="blockSnapshotModel"
+          ></field>
+        </ng-container>
+      </ng-container>
+    </div>
   </div>
-</div>
+</ng-container>
