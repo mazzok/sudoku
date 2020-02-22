@@ -121,13 +121,6 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
             while(it.hasNext()) {
                 Map.Entry<String, List<SudokuField>> entry = it.next();
 
-                String message = String.format("There are %s field within the same %s, which can only contain one of the values [%s]." +
-                                " Therefore these values are removed from all other fields of the same %s",
-                        entry.getValue().size(),
-                        type,
-                        Arrays.asList(entry.getKey().split(",")),
-                        type);
-
                 //remove those entries from all other elements the given array
                 List<SudokuField> otherSudokuFields = new LinkedList<>(Arrays.asList(sudokuFieldArray));
                 otherSudokuFields.removeAll(entry.getValue());
@@ -141,32 +134,40 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
                         .filter(p -> valuesToHide.contains(p.getValue()))
                         .forEach(p-> p.setIsHidden(true)));
 
+                String message = String.format("There are %s field within the same %s, which can only contain one of the values [%s]." +
+                                " Therefore these values are removed from all other fields of the same %s",
+                        entry.getValue().size(),
+                        type,
+                        Arrays.asList(entry.getKey().split(",")),
+                        type);
                 this.logSolutionTrailStep(message, entry.getValue(), otherSudokuFields);
 
 
-                if (areFieldsInSameRow(entry.getValue())) {
-                    List<SudokuField> row = new LinkedList<>(Arrays.asList(getRow(getRowIndex(entry.getValue().get(0)))));
-                    row.removeAll(entry.getValue());
-                    row.forEach(s -> s.getPossibleValues()
-                            .stream()
-                            .filter(p -> valuesToHide.contains(p.getValue()))
-                            .forEach(p-> p.setIsHidden(true)));
+//                if (type == "block") {
+                    if (areFieldsInSameRow(entry.getValue())) {
+                        List<SudokuField> row = new LinkedList<>(Arrays.asList(getRow(getRowIndex(entry.getValue().get(0)))));
+                        row.removeAll(entry.getValue());
+                        row.forEach(s -> s.getPossibleValues()
+                                .stream()
+                                .filter(p -> valuesToHide.contains(p.getValue()))
+                                .forEach(p-> p.setIsHidden(true)));
 
-                    this.logSolutionTrailStep(String.format("These fields are additionally in the same row, therefore values [%s] are removed from there aswell"
-                            ,Arrays.asList(entry.getKey().split(","))), entry.getValue(), row);
+                        this.logSolutionTrailStep(String.format("These fields are additionally in the same row, therefore values [%s] are removed from there aswell"
+                                ,Arrays.asList(entry.getKey().split(","))), entry.getValue(), row);
 
-                } else if (areFieldsInSameColumn(entry.getValue())) {
-                    List<SudokuField> column = new LinkedList<>(Arrays.asList(getColumn(getColIndex(entry.getValue().get(0)))));
-                    column.removeAll(entry.getValue());
-                    column.forEach(s -> s.getPossibleValues()
-                            .stream()
-                            .filter(p -> valuesToHide.contains(p.getValue()))
-                            .forEach(p-> p.setIsHidden(true)));
+                    } else if (areFieldsInSameColumn(entry.getValue())) {
+                        List<SudokuField> column = new LinkedList<>(Arrays.asList(getColumn(getColIndex(entry.getValue().get(0)))));
+                        column.removeAll(entry.getValue());
+                        column.forEach(s -> s.getPossibleValues()
+                                .stream()
+                                .filter(p -> valuesToHide.contains(p.getValue()))
+                                .forEach(p-> p.setIsHidden(true)));
 
-                    this.logSolutionTrailStep(String.format("These fields are additionally in the same column, therefore values [%s] are removed from there aswell"
-                            ,Arrays.asList(entry.getKey().split(","))), entry.getValue(), column);
+                        this.logSolutionTrailStep(String.format("These fields are additionally in the same column, therefore values [%s] are removed from there aswell"
+                                ,Arrays.asList(entry.getKey().split(","))), entry.getValue(), column);
 
-                }
+                    }
+//                }
             }
             return true;
         }
@@ -180,7 +181,6 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
             if (fields.size() == 1 ) {
                 SudokuField[] row = getRow(getRowIndex(fields.get(0)));
                 SudokuField[] column = getColumn(getColIndex(fields.get(0)));
-                System.out.println("solving "+fields.get(0).toString() +" with value "+singlePossibleValue);
                 fields.get(0).setValue(singlePossibleValue,true);
                 return true;
             }

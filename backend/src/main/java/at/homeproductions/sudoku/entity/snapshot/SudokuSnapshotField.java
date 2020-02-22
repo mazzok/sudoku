@@ -1,10 +1,12 @@
 package at.homeproductions.sudoku.entity.snapshot;
 
 import at.homeproductions.sudoku.entity.AbstractSudokuField;
+import at.homeproductions.sudoku.entity.PossibleValue;
 import at.homeproductions.sudoku.entity.SudokuBlock;
 import at.homeproductions.sudoku.entity.SudokuField;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class SudokuSnapshotField extends AbstractSudokuField<SudokuSnapshotBlock> {
     private boolean isReactor;
@@ -46,7 +48,14 @@ public class SudokuSnapshotField extends AbstractSudokuField<SudokuSnapshotBlock
         this.value = sudokuField.getValue();
         this.x = sudokuField.getX();
         this.y = sudokuField.getY();
-        this.possibleValues = sudokuField.getPossibleValues();
+        this.possibleValues = sudokuField.getPossibleValues().stream().map(this::copy).collect(Collectors.toList());
+    }
+
+    private PossibleValue copy(PossibleValue other) {
+        PossibleValue copyTo = new PossibleValue();
+        copyTo.setIsHidden(other.getIsHidden());
+        copyTo.setValue(other.getValue());
+        return copyTo;
     }
 
 
