@@ -18,10 +18,10 @@ import java.util.List;
 public class SudokuResource {
 
     @Path("solve")
-    @POST
+    @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response solve(SudokuModel sudoku) {
+    public Response solve() {
         Sudoku s = new Sudoku();
         s.addInitialField(1,0,3);
         s.addInitialField(3,1,1);
@@ -46,7 +46,7 @@ public class SudokuResource {
 
         s.solve();
 
-        return Response.ok(new SudokuSnapshotConverter().toModel(s.getSnapshots().get(0))).build();
+        return Response.ok(new SudokuConverter().toModel(s)).build();
     }
 
     @GET

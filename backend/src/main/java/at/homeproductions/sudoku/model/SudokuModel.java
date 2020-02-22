@@ -1,5 +1,7 @@
 package at.homeproductions.sudoku.model;
 
+import at.homeproductions.sudoku.entity.snapshot.SudokuSnapshot;
+
 import java.util.List;
 
 public class SudokuModel {
@@ -9,6 +11,8 @@ public class SudokuModel {
     private int yDim;
 
     private List<SudokuBlockModel> sudokuBlocks;
+
+    private List<SudokuSnapshotModel> snapshots;
 
     public int getxDim() {
         return xDim;
@@ -32,5 +36,13 @@ public class SudokuModel {
 
     public void setSudokuBlocks(List<SudokuBlockModel> sudokuBlocks) {
         this.sudokuBlocks = sudokuBlocks;
+    }
+
+    public List<SudokuSnapshotModel> getSnapshots() {
+        return snapshots;
+    }
+
+    public void setSnapshots(List<SudokuSnapshotModel> snapshots) {
+        this.snapshots = snapshots;
     }
 }
