@@ -10,6 +10,7 @@ public class AbstractSudokuField<B extends AbstractSudokuBlock> {
 
     protected B block;
     protected Integer value;
+    protected boolean isValueReserved;
     protected List<PossibleValue> possibleValues = new ArrayList<>();
 
     protected int x;
@@ -86,5 +87,11 @@ public class AbstractSudokuField<B extends AbstractSudokuBlock> {
         this.possibleValues = possibleValues;
     }
 
+    public boolean getIsValueReserved() {
+        return isValueReserved;
+    }
 
+    public void setIsValueReserved(boolean valueReserved) {
+        isValueReserved = valueReserved;
+    }
 }

@@ -10,6 +10,7 @@ public class SudokuSnapshotFieldModel {
     private int y;
     private Integer value;
     private List<PossibleValueModel> possibleValues;
+    private boolean isValueReserved;
 
     public int getX() {
         return x;
@@ -63,6 +64,11 @@ public class SudokuSnapshotFieldModel {
         this.possibleValues = possibleValues;
     }
 
+    public boolean getIsValueReserved() {
+        return isValueReserved;
+    }
 
-
+    public void setIsValueReserved(boolean valueReserved) {
+        isValueReserved = valueReserved;
+    }
 }

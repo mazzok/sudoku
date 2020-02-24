@@ -2,29 +2,29 @@
   <ng-container *ngIf="field">
     <ng-container *ngIf="field.isInitialField">
       <button type="button" class="isInitialField">
-        {{ field.value }}
+        {{ getInitialFieldValue() }}
       </button>
     </ng-container>
     <ng-container *ngIf="!field.isInitialField">
-      <button type="button" class="isNotInitialField">
-        {{ field.value }}
+      <button type="button" class="isDefaultField">
+        {{ getDefaultFieldValue() }}
       </button>
     </ng-container>
   </ng-container>
   <ng-container *ngIf="snapshotfield">
     <ng-container *ngIf="snapshotfield.isActor">
       <button type="button" class="isActorField">
-        {{ snapshotfield.value }}
+        {{ getIsActorFieldValue() }}
       </button>
     </ng-container>
     <ng-container *ngIf="snapshotfield.isReactor">
       <button type="button" class="isReactorField">
-        {{ snapshotfield.value }}
+        {{ getIsReactorFieldValue() }}
       </button>
     </ng-container>
     <ng-container *ngIf="!snapshotfield.isActor && !snapshotfield.isReactor">
-      <button type="button" class="isNotInitialField">
-        {{ snapshotfield.value }}
+      <button type="button" class="isDefaultField">
+        {{ getDefaultFieldValue() }}
       </button>
     </ng-container>
   </ng-container>

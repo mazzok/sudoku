@@ -11,6 +11,7 @@ public class SudokuFieldModel {
     private Integer value;
     private List<PossibleValueModel> possibleValues;
     private boolean isInitialField;
+    private boolean isValueReserved;
 
     public int getX() {
         return x;
@@ -50,5 +51,13 @@ public class SudokuFieldModel {
 
     public void setIsInitialField(boolean initialField) {
         this.isInitialField = initialField;
+    }
+
+    public boolean getIsValueReserved() {
+        return this.isValueReserved;
+    }
+
+    public void setIsValueReserved(boolean isValueReserved) {
+        this.isValueReserved = isValueReserved;
     }
 }

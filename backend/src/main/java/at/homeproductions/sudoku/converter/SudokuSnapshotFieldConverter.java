@@ -14,6 +14,7 @@ public class SudokuSnapshotFieldConverter extends AbstractConverter<SudokuSnapsh
         entity.setIsReactor(model.getIsReactor());
         entity.setValue(model.getValue());
         entity.setPossibleValues(new PossibleValueConverter().toEntityList(model.getPossibleValues()));
+        entity.setIsValueReserved(model.getIsValueReserved());
         return entity;
     }
 
@@ -26,7 +27,7 @@ public class SudokuSnapshotFieldConverter extends AbstractConverter<SudokuSnapsh
         model.setIsReactor(entity.getIsReactor());
         model.setValue(entity.getValue());
         model.setPossibleValues(new PossibleValueConverter().toModelList(entity.getPossibleValues()));
-
+        model.setIsValueReserved(entity.getIsValueReserved());
         return model;
     }
 

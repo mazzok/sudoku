@@ -6,9 +6,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static java.util.Collections.singletonList;
+
 public class SudokuField extends AbstractSudokuField<SudokuBlock>{
 
     protected boolean isInitialField;
+
+
 
     public SudokuField() {
         super();
@@ -45,6 +49,7 @@ public class SudokuField extends AbstractSudokuField<SudokuBlock>{
     }
 
     public void setValue(Integer value, boolean hideOwnPossibleValues) {
+        String message = String.format("Setting Field  %s Value to %s, removing the value from columns and rows", this, value);
         this.value = value;
         System.out.println("Setting Value to "+value);
         List<SudokuField> reactors = FieldVincinityCalculator.getPossibleFieldVincinityReactors(this);
@@ -54,7 +59,7 @@ public class SudokuField extends AbstractSudokuField<SudokuBlock>{
                 .forEach(s-> s.stream()
                         .filter(p -> p.getValue()==value)
                         .forEach(p-> p.setIsHidden(true)));
-        this.getBlock().getSudoku().logSolutionTrailStep(String.format("Setting Field  %s Value to %s, removing the value from columns and rows", this, value), Collections.singletonList(this), reactors );
+        this.getBlock().getSudoku().logSolutionTrailStep(message, Collections.singletonList(this), reactors);
 
         if (hideOwnPossibleValues) {
             this.getPossibleValues().forEach(p->p.setIsHidden(true));

@@ -49,6 +49,7 @@ public class SudokuSnapshotField extends AbstractSudokuField<SudokuSnapshotBlock
         this.x = sudokuField.getX();
         this.y = sudokuField.getY();
         this.possibleValues = sudokuField.getPossibleValues().stream().map(this::copy).collect(Collectors.toList());
+        this.isValueReserved = sudokuField.getIsValueReserved();
     }
 
     private PossibleValue copy(PossibleValue other) {

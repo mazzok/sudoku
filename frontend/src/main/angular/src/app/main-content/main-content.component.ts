@@ -22,7 +22,7 @@ export class MainContentComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.sudokuCacheService.sudoku.subscribe(response => {
         if (response !== null) {
-          console.log("load sudoku:" + response);
+          console.log("load sudoku:" + JSON.stringify(response));
           this.sudoku = response;
         }
       })
@@ -35,6 +35,6 @@ export class MainContentComponent implements OnInit, OnDestroy {
 
   helpMeClicked(): void {
     console.log("help me clicked!");
-    this.helpMeService.helpMe.next(this.sudokuCacheService.sudoku.getValue());
+    this.helpMeService.helpMe.next(this.sudoku);
   }
 }

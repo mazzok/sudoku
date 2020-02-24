@@ -7,4 +7,5 @@ export interface SudokuSnapshotFieldModel {
   isReactor: boolean;
   isActor: boolean;
   possibleValues: PossibleValueModel[];
+  isValueReserved: boolean;
 }

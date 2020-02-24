@@ -6,4 +6,5 @@ export interface SudokuFieldModel {
   value: number;
   isInitialField: boolean;
   possibleValues: PossibleValueModel[];
+  isValueReserved: boolean;
 }
