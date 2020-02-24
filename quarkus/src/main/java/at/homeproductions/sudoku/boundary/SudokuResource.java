@@ -22,27 +22,7 @@ public class SudokuResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response solve() {
-        Sudoku s = new Sudoku();
-        s.addInitialField(1,0,3);
-        s.addInitialField(3,1,1);
-        s.addInitialField(4,1,9);
-        s.addInitialField(5,1,5);
-        s.addInitialField(2,2,8);
-        s.addInitialField(7,2,6);
-        s.addInitialField(0,3,8);
-        s.addInitialField(4,3,6);
-        s.addInitialField(0,4,4);
-        s.addInitialField(3,4,8);
-        s.addInitialField(8,4,1);
-        s.addInitialField(4,5,2);
-        s.addInitialField(1,6,6);
-        s.addInitialField(6,6,2);
-        s.addInitialField(7,6,8);
-        s.addInitialField(3,7,4);
-        s.addInitialField(4,7,1);
-        s.addInitialField(5,7,9);
-        s.addInitialField(8,7,5);
-        s.addInitialField(7,8,7);
+        Sudoku s = Sudoku.getDefaulSudoku();
 
         s.solve();
 
@@ -52,27 +32,7 @@ public class SudokuResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response unsolved() {
-        Sudoku s = new Sudoku();
-        s.addInitialField(1,0,3);
-        s.addInitialField(3,1,1);
-        s.addInitialField(4,1,9);
-        s.addInitialField(5,1,5);
-        s.addInitialField(2,2,8);
-        s.addInitialField(7,2,6);
-        s.addInitialField(0,3,8);
-        s.addInitialField(4,3,6);
-        s.addInitialField(0,4,4);
-        s.addInitialField(3,4,8);
-        s.addInitialField(8,4,1);
-        s.addInitialField(4,5,2);
-        s.addInitialField(1,6,6);
-        s.addInitialField(6,6,2);
-        s.addInitialField(7,6,8);
-        s.addInitialField(3,7,4);
-        s.addInitialField(4,7,1);
-        s.addInitialField(5,7,9);
-        s.addInitialField(8,7,5);
-        s.addInitialField(7,8,7);
+        Sudoku s = Sudoku.getDefaulSudoku();
 
         return Response.ok(new SudokuConverter().toModel(s)).build();
     }

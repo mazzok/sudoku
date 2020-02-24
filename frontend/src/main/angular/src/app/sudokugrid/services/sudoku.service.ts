@@ -14,28 +14,27 @@ export class SudokuService {
   url = "sudoku";
 
   public getSudoku(): Observable<SudokuModel> {
-    console.log("getting Sudoku from " + this.url);
-    return this.http.get<SudokuModel>(this.url);
+    const path = this.url + "/solve";
+    console.log("getting Sudoku from " + path);
+    return this.http.get<SudokuModel>(path);
   }
 
-  public solveSudoku(
+  public nextStepForSudoku(
     sudokuToSolve: SudokuModel
   ): Observable<SudokusnapshotModel> {
+    const path = this.url + "/solve/step";
     console.log(
       "solving Sudoku at " +
-        this.url +
-        "/solve" +
+        path +
         " for sudoku: " +
         JSON.stringify(sudokuToSolve)
     );
-    return this.http
-      .post<SudokusnapshotModel>(this.url + "/solve", sudokuToSolve)
-      .pipe(
-        map(data => {
-          console.log("received data:" + JSON.stringify(data));
-          return data;
-        })
-      );
+    return this.http.post<SudokusnapshotModel>(path, sudokuToSolve).pipe(
+      map(data => {
+        console.log("received data:" + JSON.stringify(data));
+        return data;
+      })
+    );
   }
 
   public setFieldValue(

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, Input } from "@angular/core";
 import { HelpMeService } from "src/app/sudokugrid/services/sudokuhelpme.service";
 import { Subscription } from "rxjs";
 import { SudokuModel } from "../models/sudokumodel";
@@ -25,7 +25,7 @@ export class GridHintComponent implements OnInit, OnDestroy {
   }
 
   private helpMeWithSudoku(sudokuModel: SudokuModel): void {
-    this.sudokuService.solveSudoku(sudokuModel).subscribe(result => {
+    this.sudokuService.nextStepForSudoku(sudokuModel).subscribe(result => {
       console.log("received data from sudoku service");
       this.sudokuSnapshot = result;
     });

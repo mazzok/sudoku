@@ -8,18 +8,37 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
-    //
-//
-//    protected int yBlockDim;
-//    protected int xBlockDim;
-//    protected SudokuBlock[][] blocks;
-//    protected int xBlocks;
-//    protected int yBlocks;
+
     private List<SudokuSnapshot> snapshots;
 
     public Sudoku() {
         super();
         this.snapshots = new ArrayList<>();
+    }
+
+    public static Sudoku getDefaulSudoku() {
+       Sudoku s = new Sudoku();
+        s.addInitialField(1, 0, 3);
+        s.addInitialField(3, 1, 1);
+        s.addInitialField(4, 1, 9);
+        s.addInitialField(5, 1, 5);
+        s.addInitialField(2, 2, 8);
+        s.addInitialField(7, 2, 6);
+        s.addInitialField(0, 3, 8);
+        s.addInitialField(4, 3, 6);
+        s.addInitialField(0, 4, 4);
+        s.addInitialField(3, 4, 8);
+        s.addInitialField(8, 4, 1);
+        s.addInitialField(4, 5, 2);
+        s.addInitialField(1, 6, 6);
+        s.addInitialField(6, 6, 2);
+        s.addInitialField(7, 6, 8);
+        s.addInitialField(3, 7, 4);
+        s.addInitialField(4, 7, 1);
+        s.addInitialField(5, 7, 9);
+        s.addInitialField(8, 7, 5);
+        s.addInitialField(7, 8, 7);
+        return s;
     }
 
     @Override
@@ -108,6 +127,8 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
                                 .collect(Collectors.joining(" ")
                                 )));
 
+
+
         //filter those where the amount of possible numbers equals the number of fields
         Map<String, List<SudokuField>> possibleValuesEqualsFieldSizeMap = samePossibleValuesMap
                 .entrySet()
@@ -121,6 +142,14 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
             while(it.hasNext()) {
                 Map.Entry<String, List<SudokuField>> entry = it.next();
 
+                if (entry.getValue().stream().allMatch(p -> p.getIsValueReserved() == true)) {
+                    continue;
+                }
+
+                if (entry.getValue().size() == 1 && entry.getValue().get(0).getPossibleValues().stream().filter(p -> p.getIsHidden() == false).count() == 1l) {
+                    continue;
+                }
+
                 //remove those entries from all other elements the given array
                 List<SudokuField> otherSudokuFields = new LinkedList<>(Arrays.asList(sudokuFieldArray));
                 otherSudokuFields.removeAll(entry.getValue());
@@ -133,8 +162,10 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
                         .stream()
                         .filter(p -> valuesToHide.contains(p.getValue()))
                         .forEach(p-> p.setIsHidden(true)));
+                //hide all entries possible values
+                entry.getValue().forEach(f -> f.setIsValueReserved(true));
 
-                String message = String.format("There are %s field within the same %s, which can only contain one of the values [%s]." +
+                String message = String.format("There are %s field within the same %s, which can only contain one of the values %s." +
                                 " Therefore these values are removed from all other fields of the same %s",
                         entry.getValue().size(),
                         type,
@@ -143,8 +174,9 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
                 this.logSolutionTrailStep(message, entry.getValue(), otherSudokuFields);
 
 
-//                if (type == "block") {
-                    if (areFieldsInSameRow(entry.getValue())) {
+
+                if (type == "block") {
+                    if (areFieldsInSameRow(entry.getValue()) && areAnyFieldsNotSet(entry.getValue())) {
                         List<SudokuField> row = new LinkedList<>(Arrays.asList(getRow(getRowIndex(entry.getValue().get(0)))));
                         row.removeAll(entry.getValue());
                         row.forEach(s -> s.getPossibleValues()
@@ -167,7 +199,7 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
                                 ,Arrays.asList(entry.getKey().split(","))), entry.getValue(), column);
 
                     }
-//                }
+                }
             }
             return true;
         }
@@ -179,14 +211,26 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
             List<SudokuField> fields = getFieldsByValue(singlePossibleValue, sudokuFieldArray);
 
             if (fields.size() == 1 ) {
-                SudokuField[] row = getRow(getRowIndex(fields.get(0)));
-                SudokuField[] column = getColumn(getColIndex(fields.get(0)));
                 fields.get(0).setValue(singlePossibleValue,true);
+
+                SudokuSnapshot currentTrail = this.snapshots.get(this.snapshots.size()-1);
+                if (currentTrail != null) {
+                    String message = String.format("%s is the single possible value for field %s in its %s",
+                            singlePossibleValue,
+                            fields.get(0),
+                            type
+                    );
+                    currentTrail.setMessage(message + "."+ currentTrail.getMessage());
+                }
                 return true;
             }
             return false;
         }
         return false;
+    }
+
+    private boolean areAnyFieldsNotSet(List<SudokuField> sudokuFields) {
+        return sudokuFields.stream().anyMatch(s -> s.getValue() == null);
     }
 
     private boolean areFieldsInSameRow(List<SudokuField> sudokuFields) {
@@ -206,13 +250,13 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
                 .collect(Collectors.toList());
     }
 
-    private Integer containsSinglePossibleValue(SudokuField[] sudokuFieldArray) {
+    protected Integer containsSinglePossibleValue(SudokuField[] sudokuFieldArray) {
         Map<Integer,List<SudokuField>> map = Arrays.stream(sudokuFieldArray)
                 .filter(s-> s.getPossibleValues().stream().filter(p-> !p.getIsHidden()).count() > 0)
                 .collect(Collectors.groupingBy(s -> (int)s.getPossibleValues().stream().filter(p-> !p.getIsHidden()).count() ) );
 
         if (map.isEmpty()) {
-            System.out.println("ERROR");
+            System.out.println("ERROR, Map is empty!");
             return null;
         }
 
@@ -278,12 +322,6 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
     }
 
     public void logSolutionTrailStep(String message, List<SudokuField> actors, List<SudokuField> reactors) {
-
-//        SudokuSnapshot snapshot = new SudokuSnapshot(message,
-//                actors.stream().map(s -> SudokuSnapshotField.asActor(s) ).collect(Collectors.toList()),
-//                reactors.stream().map(s -> SudokuSnapshotField.asReactor(s) ).collect(Collectors.toList()),
-//                this);
-
         SudokuSnapshot snapshot = new SudokuSnapshot(message,actors, reactors, this);
 
         this.snapshots.add(snapshot);
