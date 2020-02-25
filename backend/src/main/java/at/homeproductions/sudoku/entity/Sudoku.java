@@ -17,7 +17,7 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
     }
 
     public static Sudoku getDefaulSudoku() {
-       Sudoku s = new Sudoku();
+        Sudoku s = new Sudoku();
         s.addInitialField(1, 0, 3);
         s.addInitialField(3, 1, 1);
         s.addInitialField(4, 1, 9);
@@ -151,14 +151,14 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
                 }
 
                 //remove those entries from all other elements the given array
-                List<SudokuField> otherSudokuFields = new LinkedList<>(Arrays.asList(sudokuFieldArray));
-                otherSudokuFields.removeAll(entry.getValue());
+                List<SudokuField> reactors = new LinkedList<>(Arrays.asList(sudokuFieldArray));
+                reactors.removeAll(entry.getValue());
 
                 List<Integer> valuesToHide = Arrays.asList(entry.getKey().split(" "))
                         .stream()
                         .map(Integer::valueOf)
                         .collect(Collectors.toList());
-                otherSudokuFields.forEach(s -> s.getPossibleValues()
+                reactors.forEach(s -> s.getPossibleValues()
                         .stream()
                         .filter(p -> valuesToHide.contains(p.getValue()))
                         .forEach(p-> p.setIsHidden(true)));
@@ -171,7 +171,6 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
                         type,
                         Arrays.asList(entry.getKey().split(",")),
                         type);
-                this.logSolutionTrailStep(message, entry.getValue(), otherSudokuFields);
 
 
 
@@ -184,10 +183,12 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
                                 .filter(p -> valuesToHide.contains(p.getValue()))
                                 .forEach(p-> p.setIsHidden(true)));
 
-                        this.logSolutionTrailStep(String.format("These fields are additionally in the same row, therefore values [%s] are removed from there aswell"
-                                ,Arrays.asList(entry.getKey().split(","))), entry.getValue(), row);
+                        message = message.concat(".").concat(String.format("These fields are additionally in the same row, therefore values [%s] are removed from there aswell"
+                                ,Arrays.asList(entry.getKey().split(","))));
+                        reactors.addAll(row);
+                        reactors = reactors.stream().distinct().collect(Collectors.toList());
 
-                    } else if (areFieldsInSameColumn(entry.getValue())) {
+                    } else if (areFieldsInSameColumn(entry.getValue()) && areAnyFieldsNotSet(entry.getValue())) {
                         List<SudokuField> column = new LinkedList<>(Arrays.asList(getColumn(getColIndex(entry.getValue().get(0)))));
                         column.removeAll(entry.getValue());
                         column.forEach(s -> s.getPossibleValues()
@@ -195,11 +196,16 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
                                 .filter(p -> valuesToHide.contains(p.getValue()))
                                 .forEach(p-> p.setIsHidden(true)));
 
-                        this.logSolutionTrailStep(String.format("These fields are additionally in the same column, therefore values [%s] are removed from there aswell"
-                                ,Arrays.asList(entry.getKey().split(","))), entry.getValue(), column);
+                        message = message.concat(".").concat(String.format("These fields are additionally in the same column, therefore values [%s] are removed from there aswell"
+                                ,Arrays.asList(entry.getKey().split(","))));
+                        reactors.addAll(column);
+                        reactors = reactors.stream().distinct().collect(Collectors.toList());
 
                     }
+
                 }
+                //log
+                this.logSolutionTrailStep(message, entry.getValue(), reactors);
             }
             return true;
         }
@@ -215,12 +221,11 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
 
                 SudokuSnapshot currentTrail = this.snapshots.get(this.snapshots.size()-1);
                 if (currentTrail != null) {
-                    String message = String.format("%s is the single possible value for field %s in its %s",
+                    String message = String.format("%s is the single possible value for this field in its %s",
                             singlePossibleValue,
-                            fields.get(0),
                             type
                     );
-                    currentTrail.setMessage(message + "."+ currentTrail.getMessage());
+                    currentTrail.setMessage(currentTrail.getMessage().concat(".").concat(message));
                 }
                 return true;
             }

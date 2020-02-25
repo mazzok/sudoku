@@ -49,7 +49,7 @@ public class SudokuField extends AbstractSudokuField<SudokuBlock>{
     }
 
     public void setValue(Integer value, boolean hideOwnPossibleValues) {
-        String message = String.format("Setting Field  %s Value to %s, removing the value from columns and rows", this, value);
+        String message = String.format("Setting Field  %s Value to %s, removing the value from its block, column and row", this, value);
         this.value = value;
         System.out.println("Setting Value to "+value);
         List<SudokuField> reactors = FieldVincinityCalculator.getPossibleFieldVincinityReactors(this);
