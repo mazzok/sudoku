@@ -23,17 +23,28 @@ public class SudokuResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response solve() {
         Sudoku s = Sudoku.getDefaulSudoku();
-
         s.solve();
-
         return Response.ok(new SudokuConverter().toModel(s)).build();
+    }
+
+    @Path("solve/step")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response solveStep(SudokuModel model) {
+        Sudoku s = new SudokuConverter().toEntity(model);
+        s.getSnapshots().clear();
+        s.solveSteps(1l);
+        if (s.getSnapshots().isEmpty()) {
+            return Response.noContent().build();
+        }
+        return Response.ok(new SudokuSnapshotConverter().toModelList(s.getSnapshots())).build();
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response unsolved() {
         Sudoku s = Sudoku.getDefaulSudoku();
-
         return Response.ok(new SudokuConverter().toModel(s)).build();
     }
 
@@ -43,10 +54,11 @@ public class SudokuResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response setFieldValue(FieldValueChangedModel fieldValueChangedModel){
         Sudoku sudoku = new SudokuConverter().toEntity(fieldValueChangedModel.getSudokuModel());
+
         SudokuField f = sudoku.getField(fieldValueChangedModel.getBlockX(), fieldValueChangedModel.getBlockY(), fieldValueChangedModel.getFieldX(), fieldValueChangedModel.getFieldY());
 
         //set field value
-        f.setValue(fieldValueChangedModel.getValue(), false);
+        f.setValue(fieldValueChangedModel.getValue(), true);
         //set all other field values which are set currently to the picked value to null
         List<SudokuField> sameValueFields = FieldVincinityCalculator.getFieldsWithSameValue(f);
         sameValueFields.stream().forEach(s -> s.setValue(null));

@@ -12,7 +12,7 @@ import { SudokuService } from "../services/sudoku.service";
 })
 export class GridHintComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
-  sudokuSnapshot: SudokusnapshotModel;
+  sudokuSnapshots: SudokusnapshotModel[];
   constructor(
     private helpMeService: HelpMeService,
     private sudokuService: SudokuService
@@ -27,7 +27,7 @@ export class GridHintComponent implements OnInit, OnDestroy {
   private helpMeWithSudoku(sudokuModel: SudokuModel): void {
     this.sudokuService.nextStepForSudoku(sudokuModel).subscribe(result => {
       console.log("received data from sudoku service");
-      this.sudokuSnapshot = result;
+      this.sudokuSnapshots = result;
     });
   }
 

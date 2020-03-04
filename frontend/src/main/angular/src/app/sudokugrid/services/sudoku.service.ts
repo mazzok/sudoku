@@ -14,14 +14,14 @@ export class SudokuService {
   url = "sudoku";
 
   public getSudoku(): Observable<SudokuModel> {
-    const path = this.url + "/solve";
+    const path = this.url;
     console.log("getting Sudoku from " + path);
     return this.http.get<SudokuModel>(path);
   }
 
   public nextStepForSudoku(
     sudokuToSolve: SudokuModel
-  ): Observable<SudokusnapshotModel> {
+  ): Observable<SudokusnapshotModel[]> {
     const path = this.url + "/solve/step";
     console.log(
       "solving Sudoku at " +
@@ -29,7 +29,7 @@ export class SudokuService {
         " for sudoku: " +
         JSON.stringify(sudokuToSolve)
     );
-    return this.http.post<SudokusnapshotModel>(path, sudokuToSolve).pipe(
+    return this.http.post<SudokusnapshotModel[]>(path, sudokuToSolve).pipe(
       map(data => {
         console.log("received data:" + JSON.stringify(data));
         return data;

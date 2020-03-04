@@ -1,7 +1,6 @@
 package at.homeproductions.sudoku.entity;
 
 import at.homeproductions.sudoku.entity.snapshot.SudokuSnapshot;
-import at.homeproductions.sudoku.entity.snapshot.SudokuSnapshotField;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -80,38 +79,55 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
 
     public void solve() {
         calculateCandidates();
-        while(this.isNotSolved()) {
+        long unsolvedFields = getUnsolvedFields();
+        solveSteps(unsolvedFields);
+    }
+
+    public void solveSteps(long stepsToSolve) {
+        System.out.println(String.format("Solve %s Steps",stepsToSolve));
+        long currentSolveCount = 0;
+        while(currentSolveCount < stepsToSolve) {
             Iterator<SudokuField> possibleValuesIterator = getUnsolvedFieldIterator(sortFieldsByPossibleValues());
             while(possibleValuesIterator.hasNext()) {
-                SudokuField f = possibleValuesIterator.next();
-                System.out.println("processing "+ f.toString());
-                SudokuField[] row = getRow(this.getRowIndex(f));
-                SudokuField[] column = getColumn(this.getColIndex(f));
-                if (f.getPossibleValues().stream().filter(p->!p.getIsHidden()).count() == 1) {
-                    f.setValue(f.getPossibleValues().stream().filter(p->!p.getIsHidden()).findFirst().get().getValue(),true);
-                    continue;
-                } else {
-                    if (trySolvingFields(Arrays.stream(f.getBlock().getFields()).flatMap(s -> Stream.of(s)).toArray(SudokuField[]::new),"block") == Boolean.TRUE
-                            || trySolvingFields(row,"row") == Boolean.TRUE
-                            || trySolvingFields(column,"column") == Boolean.TRUE) {
-                        continue;
+                boolean stepSolved = solveStep(possibleValuesIterator.next());
+                if(stepSolved) {
+                    currentSolveCount++;
+                    if (currentSolveCount == stepsToSolve) {
+                        break;
                     }
                 }
             }
         }
     }
 
+    private boolean solveStep(SudokuField field) {
+        System.out.println("processing "+ field.toString());
+        SudokuField[] row = getRow(this.getRowIndex(field));
+        SudokuField[] column = getColumn(this.getColIndex(field));
+        if (field.getPossibleValues().stream().filter(p->!p.getIsHidden()).count() == 1) {
+            field.setValue(field.getPossibleValues().stream().filter(p->!p.getIsHidden()).findFirst().get().getValue(),true);
+            return true;
+        } else {
+            if (trySolvingFields(Arrays.stream(field.getBlock().getFields()).flatMap(s -> Stream.of(s)).toArray(SudokuField[]::new),"block") == Boolean.TRUE
+                    || trySolvingFields(row,"row") == Boolean.TRUE
+                    || trySolvingFields(column,"column") == Boolean.TRUE) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private Iterator<SudokuField> getUnsolvedFieldIterator(List<SudokuField> listPossibleValues) {
         return listPossibleValues.stream().filter(s -> s.getValue() == null).iterator();
     }
 
-    private boolean isNotSolved() {
+    private long getUnsolvedFields() {
         return Arrays.stream(this.blocks)
                 .flatMap(s -> Arrays.stream(s))
                 .map(b -> b.getFields())
                 .flatMap(ba -> Arrays.stream(ba))
                 .flatMap(ba -> Arrays.stream(ba))
-                .filter(s -> s.getValue() == null).count() > 0l ? true : false;
+                .filter(s -> s.getValue() == null).count();
     }
 
 
@@ -172,8 +188,6 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
                         Arrays.asList(entry.getKey().split(",")),
                         type);
 
-
-
                 if (type == "block") {
                     if (areFieldsInSameRow(entry.getValue()) && areAnyFieldsNotSet(entry.getValue())) {
                         List<SudokuField> row = new LinkedList<>(Arrays.asList(getRow(getRowIndex(entry.getValue().get(0)))));
@@ -207,7 +221,7 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
                 //log
                 this.logSolutionTrailStep(message, entry.getValue(), reactors);
             }
-            return true;
+//            return true;
         }
 
         //check if one possible value has a single occurence
@@ -229,7 +243,6 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
                 }
                 return true;
             }
-            return false;
         }
         return false;
     }
