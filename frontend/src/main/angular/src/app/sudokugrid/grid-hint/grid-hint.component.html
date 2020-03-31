@@ -1,12 +1,8 @@
 <ng-container *ngIf="sudokuSnapshots">
   <div class="grid">
-    <div *ngFor="let sudokuSnapshot of sudokuSnapshots">
-      <div><grid [sudokusnapshot]="sudokuSnapshot"></grid></div>
+    <ng-container *ngFor="let sudokuSnapshot of sudokuSnapshots">
+      <grid [sudokusnapshot]="sudokuSnapshot"></grid>
       <div>{{ sudokuSnapshot.message }}</div>
-    </div>
-    <!-- <div>
-      <pre>{{ sudokuSnapshot | json }}</pre>
-    </div> -->
-    <!-- <div></div> -->
+    </ng-container>
   </div>
 </ng-container>

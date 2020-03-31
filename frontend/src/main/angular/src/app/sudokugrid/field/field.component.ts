@@ -77,7 +77,7 @@ export class FieldComponent implements OnInit {
       possibleValueConcat =
         possibleValueConcat + filteredPossibleValues[i].value.toString();
       if (i < filteredPossibleValues.length - 1) {
-        possibleValueConcat = possibleValueConcat + " / ";
+        possibleValueConcat = possibleValueConcat + "/";
       }
     }
     return possibleValueConcat;
