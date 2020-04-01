@@ -28,4 +28,9 @@ public class PossibleValue {
     public void setIsHidden(boolean isHidden) {
         this.isHidden = isHidden;
     }
+
+    @Override
+    public String toString() {
+        return "value: "+this.value + " ishidden:"+isHidden;
+    }
 }

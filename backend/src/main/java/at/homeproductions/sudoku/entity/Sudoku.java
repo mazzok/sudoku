@@ -87,9 +87,9 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
         System.out.println(String.format("Solve %s Steps",stepsToSolve));
         long currentSolveCount = 0;
         while(currentSolveCount < stepsToSolve) {
-            Iterator<SudokuField> possibleValuesIterator = getUnsolvedFieldIterator(sortFieldsByPossibleValues());
-            while(possibleValuesIterator.hasNext()) {
-                boolean stepSolved = solveStep(possibleValuesIterator.next());
+            List<SudokuField> possibleValuesList = getUnsolvedFieldList(sortFieldsByPossibleValues());
+            for(SudokuField f : possibleValuesList) {
+                boolean stepSolved = solveStep(f);
                 if(stepSolved) {
                     currentSolveCount++;
                     if (currentSolveCount == stepsToSolve) {
@@ -101,7 +101,7 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
     }
 
     private boolean solveStep(SudokuField field) {
-        System.out.println("processing "+ field.toString());
+//        System.out.println("processing "+ field.toString());
         SudokuField[] row = getRow(this.getRowIndex(field));
         SudokuField[] column = getColumn(this.getColIndex(field));
         if (field.getPossibleValues().stream().filter(p->!p.getIsHidden()).count() == 1) {
@@ -117,8 +117,12 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
         return false;
     }
 
-    private Iterator<SudokuField> getUnsolvedFieldIterator(List<SudokuField> listPossibleValues) {
-        return listPossibleValues.stream().filter(s -> s.getValue() == null).iterator();
+    private List<SudokuField> getUnsolvedFieldList(List<SudokuField> listPossibleValues) {
+        return listPossibleValues.stream().filter(s -> s.getValue() == null).collect(Collectors.toList());
+    }
+
+    public boolean isNotSolved() {
+        return getUnsolvedFields() > 0l;
     }
 
     private long getUnsolvedFields() {

@@ -18,6 +18,10 @@ public abstract class AbstractSudoku<F extends AbstractSudokuField<B>, B extends
     protected int yBlocks;
 
     public AbstractSudoku() {
+        init();
+    }
+
+    protected void init() {
         this.xBlocks = 3;
         this.yBlocks = 3;
 

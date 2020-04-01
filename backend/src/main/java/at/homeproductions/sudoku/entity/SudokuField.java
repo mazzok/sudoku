@@ -10,6 +10,8 @@ import static java.util.Collections.singletonList;
 
 public class SudokuField extends AbstractSudokuField<SudokuBlock>{
 
+    public static final int DEFAULT_MIN_VALUE = 1;
+    public static final int DEFAULT_MAX_VALUE = 9;
     protected boolean isInitialField;
 
 
@@ -31,7 +33,7 @@ public class SudokuField extends AbstractSudokuField<SudokuBlock>{
 
 
     private void initPossibleValues() {
-        this.possibleValues = IntStream.rangeClosed(1,9).boxed().map(PossibleValue::new).collect(Collectors.toList());
+        this.possibleValues = IntStream.rangeClosed(DEFAULT_MIN_VALUE,DEFAULT_MAX_VALUE).boxed().map(PossibleValue::new).collect(Collectors.toList());
     }
 
     @Override

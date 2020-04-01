@@ -44,21 +44,6 @@ public class SudokuSnapshotField extends AbstractSudokuField<SudokuSnapshotBlock
 //        return snapshotField;
 //    }
 
-    private void copy(SudokuField sudokuField) {
-        this.value = sudokuField.getValue();
-        this.x = sudokuField.getX();
-        this.y = sudokuField.getY();
-        this.possibleValues = sudokuField.getPossibleValues().stream().map(this::copy).collect(Collectors.toList());
-        this.isValueReserved = sudokuField.getIsValueReserved();
-    }
-
-    private PossibleValue copy(PossibleValue other) {
-        PossibleValue copyTo = new PossibleValue();
-        copyTo.setIsHidden(other.getIsHidden());
-        copyTo.setValue(other.getValue());
-        return copyTo;
-    }
-
 
     public boolean getIsActor() {
         return this.isActor;
