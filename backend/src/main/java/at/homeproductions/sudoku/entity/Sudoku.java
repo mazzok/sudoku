@@ -8,6 +8,19 @@ import java.util.stream.Stream;
 
 public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
 
+    public static Comparator<SudokuField> SORT_BY_POSSIBLE_VALUES_SIZE_ASC =
+        (s1,s2) -> {
+            long s1NotHiddenValues = s1.getPossibleValues().stream().filter(p -> !p.getIsHidden()).count();
+            long s2NotHiddenValues = s2.getPossibleValues().stream().filter(p -> !p.getIsHidden()).count();
+            if (s1NotHiddenValues == s2NotHiddenValues) {
+                return 0;
+            }
+            if (s1NotHiddenValues < s2NotHiddenValues) {
+                return -1;
+            }
+            return 1;
+        };
+
     private List<SudokuSnapshot> snapshots;
 
     public Sudoku() {
@@ -43,17 +56,6 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
     @Override
     protected SudokuBlock createSudokuBlock(int y, int x) {
         return new SudokuBlock(this,x,y,this.xBlockDim,this.yBlockDim);
-    }
-
-    @Override
-    public String toString() {
-        StringBuffer b = new StringBuffer();
-        for (int i = 0; i < this.yBlockDim*this.yBlocks;i++) {
-            b.append(Arrays.stream(getRow(i))
-                    .map(f -> f.getValue() != null ? String.valueOf(f.getValue()) : "["+f.getPossibleValues().stream().map(k -> String.valueOf(k.getValue()) + (k.getIsHidden() == true ? "(h)" : "")).collect(Collectors.joining(","))+"]")
-                    .collect(Collectors.joining(";")) + System.getProperty("line.separator"));
-        }
-        return b.toString();
     }
 
 
@@ -117,7 +119,7 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
         return false;
     }
 
-    private List<SudokuField> getUnsolvedFieldList(List<SudokuField> listPossibleValues) {
+    protected List<SudokuField> getUnsolvedFieldList(List<SudokuField> listPossibleValues) {
         return listPossibleValues.stream().filter(s -> s.getValue() == null).collect(Collectors.toList());
     }
 
@@ -125,7 +127,7 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
         return getUnsolvedFields() > 0l;
     }
 
-    private long getUnsolvedFields() {
+    protected long getUnsolvedFields() {
         return Arrays.stream(this.blocks)
                 .flatMap(s -> Arrays.stream(s))
                 .map(b -> b.getFields())
@@ -308,18 +310,9 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
         return u.filter(s -> s.getPossibleValues()
                 .stream()
                 .anyMatch(p->!p.getIsHidden()))
-                .sorted( (s1,s2) -> {
-                    long s1NotHiddenValues = s1.getPossibleValues().stream().filter(p->!p.getIsHidden()).count();
-                    long s2NotHiddenValues = s2.getPossibleValues().stream().filter(p->!p.getIsHidden()).count();
-                    if (s1NotHiddenValues == s2NotHiddenValues) {
-                        return 0;
-                    }
-                    if (s1NotHiddenValues < s2NotHiddenValues){
-                        return -1;
-                    }
-                    return 1;
-                } ).collect(Collectors.toList());
+                .sorted(Sudoku.SORT_BY_POSSIBLE_VALUES_SIZE_ASC).collect(Collectors.toList());
     }
+
 
     public void calculateCandidates() {
         for ( int i = 0; i < this.yBlocks;i++) {

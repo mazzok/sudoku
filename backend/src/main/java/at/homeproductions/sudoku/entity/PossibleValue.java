@@ -9,6 +9,8 @@ public class PossibleValue {
         this.value = value;
     }
 
+
+
     public PossibleValue() {
         super();
     }
@@ -32,5 +34,12 @@ public class PossibleValue {
     @Override
     public String toString() {
         return "value: "+this.value + " ishidden:"+isHidden;
+    }
+
+    public static PossibleValue copy(PossibleValue other) {
+        PossibleValue copyTo = new PossibleValue();
+        copyTo.setIsHidden(other.getIsHidden());
+        copyTo.setValue(other.getValue());
+        return copyTo;
     }
 }
