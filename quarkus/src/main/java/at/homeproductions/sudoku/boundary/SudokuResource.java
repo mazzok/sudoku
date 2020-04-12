@@ -45,7 +45,26 @@ public class SudokuResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response unsolved() {
         Sudoku s = Sudoku.getDefaulSudoku();
+
+        s = _debugStep(s, 0,0,0,1,6);
+        s = _debugStep(s, 2,2,1,1,3);
+        s = _debugStep(s, 2,2,0,1,6);
+        s = _debugStep(s, 2,0,1,0,1);
+        s = _debugStep(s, 0,1,2,1,6);
+        s = _debugStep(s, 0,2,1,1,8);
         return Response.ok(new SudokuConverter().toModel(s)).build();
+    }
+
+    private Sudoku _debugStep(Sudoku s, int blockX, int blockY, int fieldX, int fielY, int value) {
+        SudokuModel model = new SudokuConverter().toModel(s);
+        FieldValueChangedModel m = new FieldValueChangedModel();
+        m.setBlockX(blockX);
+        m.setBlockY(blockY);
+        m.setFieldX(fieldX);
+        m.setFieldY(fielY);
+        m.setValue(value);
+        m.setSudokuModel(model);
+        return internSetFieldValue(m);
     }
 
     @POST
@@ -53,6 +72,11 @@ public class SudokuResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response setFieldValue(FieldValueChangedModel fieldValueChangedModel){
+        Sudoku sudoku = internSetFieldValue(fieldValueChangedModel);
+        return Response.ok(new SudokuConverter().toModel(sudoku)).build();
+    }
+
+    private Sudoku internSetFieldValue(FieldValueChangedModel fieldValueChangedModel) {
         Sudoku sudoku = new SudokuConverter().toEntity(fieldValueChangedModel.getSudokuModel());
 
         SudokuField f = sudoku.getField(fieldValueChangedModel.getBlockX(), fieldValueChangedModel.getBlockY(), fieldValueChangedModel.getFieldX(), fieldValueChangedModel.getFieldY());
@@ -65,7 +89,7 @@ public class SudokuResource {
         sameValueFields.stream().forEach(s -> FieldVincinityCalculator.hideOrUnhidePossibleValues(sudoku, s));
 
         FieldVincinityCalculator.hideOrUnhidePossibleValues(sudoku, f);
-        return Response.ok(new SudokuConverter().toModel(sudoku)).build();
+        return sudoku;
     }
 
 }

@@ -25,7 +25,8 @@ public abstract class AbstractSudoku<F extends AbstractSudokuField<B>, B extends
         StringBuffer b = new StringBuffer();
         for (int i = 0; i < this.yBlockDim*this.yBlocks;i++) {
             b.append(Arrays.stream(getRow(i))
-                    .map(f -> f.getValue() != null ? String.valueOf(f.getValue()) : "["+f.getPossibleValues().stream().map(k -> String.valueOf(k.getValue()) + (k.getIsHidden() == true ? "(h)" : "")).collect(Collectors.joining(","))+"]")
+                    .map(f -> f.getValue() != null ? String.valueOf(f.getValue())
+                            : "["+f.getPossibleValues().stream().map(k -> String.valueOf(k.getValue()) + (k.getIsHidden() == true ? "(h)" : "")).collect(Collectors.joining(","))+"]")
                     .collect(Collectors.joining(";")) + System.getProperty("line.separator"));
         }
         return b.toString();

@@ -1,6 +1,5 @@
 package at.homeproductions.sudoku.generator;
 
-import at.homeproductions.sudoku.entity.SudokuField;
 import at.homeproductions.sudoku.entity.generator.GeneratedSudoku;
 import at.homeproductions.sudoku.entity.generator.GeneratedSudokuField;
 
@@ -27,15 +26,29 @@ public class SudokuGenerator {
             markSorted(column);
 
             System.out.println("Exchange InBlock for ROW "+y);
-            exchangeInBlock(s, row, Direction.ROW);
+            exchangeInBlock(s, row, Direction.ROW,y);
             System.out.println(s);
 
             System.out.println("Exchange InBlock for COLUMN "+x);
-            exchangeInBlock(s, column, Direction.COLUMN);
+            exchangeInBlock(s, column, Direction.COLUMN,x);
             System.out.println(s);
 
-//              System.out.println(rowDuplicates.stream().map(GeneratedSudokuField::getValue).collect(Collectors.toList()));
-//            System.out.println(columnDuplicates.stream().map(GeneratedSudokuField::getValue).collect(Collectors.toList()));
+            if (x > 1) {
+                if(!s.checkAllColumnSumUpTo(x) || !s.checkAllColumnUpToNoDuplicates(x)) {
+                    throw new IllegalStateException("The generated sudoku is not valid:"+s.toString());
+                }
+            }
+
+            if (y > 1) {
+                if (!s.checkAllRowSumUpTo(y) || !s.checkAllRowUpToNoDuplicates(y)){
+                    throw new IllegalStateException("The generated sudoku is not valid:"+s.toString());
+                }
+            }
+
+        }
+
+        if (!s.isValid()) {
+            throw new IllegalStateException("The generated sudoku is not valid:"+s.toString());
         }
         return s;
     }
@@ -44,7 +57,7 @@ public class SudokuGenerator {
         Arrays.stream(row).forEach(f -> f.setSorted(true));
     }
 
-    private static void exchangeInBlock(GeneratedSudoku sudoku, GeneratedSudokuField[] data, Direction direction) {
+    private static void exchangeInBlock(GeneratedSudoku sudoku, GeneratedSudokuField[] data, Direction direction, int rowOrColumnNum) {
         Map<Integer, GeneratedSudokuField> registeredMap = new LinkedHashMap<>();
         List<Integer> dataValues = Arrays.stream(data).map(GeneratedSudokuField::getValue).collect(Collectors.toList());
         for (int i = 0; i < data.length;i++) {
@@ -74,27 +87,10 @@ public class SudokuGenerator {
                     continue;
                 } else {
                     System.out.println("No free fields for duplicate value "+f.getValue()+" trying adjacent elements!");
-
-                    backtraceAdjacentValues(f, data,i, registeredMap, direction);
-//                    List<GeneratedSudokuField> freeAdjancentValues = getAdjacentValues(f, direction)
-//                            .stream()
-//                            .filter(s -> !dataValues.contains(s.getValue()))
-//                            .filter(s -> registeredMap.get(s.getValue()) == null)
-//                            .collect(Collectors.toList());
-//
-//                    if (!freeAdjancentValues.isEmpty()) {
-//                        Integer fieldValue = f.getValue();
-//                        GeneratedSudokuField exchangeValueField = freeAdjancentValues.get(0);
-//                        System.out.println(String.format("Exchanging duplicate %s with free field value %s in its block", f.getValue(), exchangeValueField.getValue()));
-//                        f.setValue(exchangeValueField.getValue());
-//                        exchangeValueField.setValue(fieldValue);
-//                        registeredMap.put(f.getValue(), f);
-//                    }
+                    backtraceAdjacentValues(f, data,i, registeredMap, direction, rowOrColumnNum);
                 }
-
             }
-
-            System.out.println(sudoku);
+//            System.out.println(sudoku);
         }
     }
 
@@ -112,32 +108,32 @@ public class SudokuGenerator {
         System.out.println(to.getBlock().getSudoku().toString());
     }
 
-    private static void backtraceAdjacentValues(GeneratedSudokuField f, GeneratedSudokuField[] data, Integer index, Map<Integer, GeneratedSudokuField> registeredMap, Direction direction) {
-        System.out.println(String.format("backtrace possible values from first occurences for %s ...", direction));
-        GeneratedSudokuField firstOccurence = registeredMap.get(f.getValue());
-        List<Integer> registeredMapValues = registeredMap.values().stream().map(GeneratedSudokuField::getValue).collect(Collectors.toList());
-        if (firstOccurence == null) {
-            System.out.println(f.getValue()+" is the correct fill!");
-            return;
-        }
-        System.out.println(String.format("The first possible first occurences of value %s is %s",f.getValue(),firstOccurence.toString()));
-        List<GeneratedSudokuField> adjancentValues = getAdjacentValues(firstOccurence, direction);
-        System.out.println("The adjacent values of the first occurence of "+firstOccurence.getValue()+" are "+adjancentValues.stream().map(GeneratedSudokuField::getValue).collect(Collectors.toList()));
-        if (!adjancentValues.isEmpty()) {
-            //see if any of the ddjacent numbers is still not regstered
-            Optional<GeneratedSudokuField> freeValue = adjancentValues.stream().filter(g -> !registeredMapValues.contains(g.getValue())).findFirst();
-            if (freeValue.isPresent()) {
-                System.out.println(freeValue.get().getValue()+" is not yet chosen - take that");
-                exchangeValue(firstOccurence, freeValue.get());
-                updateRegisteredMap(index, registeredMap,data);
-
-            } else {
-                System.out.println("The first adjacent value "+adjancentValues.get(0).getValue()+" is already registered, switch that with first occurence of "+firstOccurence.getValue()+" and iteratively backtrace");
-                exchangeValue(firstOccurence, adjancentValues.get(0));
-                updateRegisteredMap(index, registeredMap,data);
-                backtraceAdjacentValues(firstOccurence, data, index, registeredMap, direction);
+    private static void backtraceAdjacentValues(GeneratedSudokuField f, GeneratedSudokuField[] data, Integer index, Map<Integer, GeneratedSudokuField> registeredMap, Direction direction, int rowOrColumnNum) {
+        System.out.println(String.format("backtrace possible value %s for current %s %s...",f.getValue(), direction, rowOrColumnNum));
+        Optional<GeneratedSudokuField> sameValueField = Arrays.stream(data)
+                .filter(field -> field.getValue().equals(f.getValue()))
+                .filter(field -> !field.equals(f))
+                .filter(field -> field.isSorted())
+                .findFirst();
+        if (sameValueField.isPresent()) {
+            System.out.println(String.format("The first possible field with value %s is %s",f.getValue(), sameValueField.get().toString()));
+            List<GeneratedSudokuField> adjancentValues = getAdjacentValues(sameValueField.get(), direction);
+            System.out.println("The adjacent values of the first occurence of "+sameValueField.get().getValue()+" are "+adjancentValues.stream().map(GeneratedSudokuField::getValue).collect(Collectors.toList()));
+            if (!adjancentValues.isEmpty()) {
+                //see if any of the adjacent numbers is still not registered
+                List<Integer> registeredMapValues = registeredMap.values().stream().map(GeneratedSudokuField::getValue).collect(Collectors.toList());
+                Optional<GeneratedSudokuField> freeValue = adjancentValues.stream().filter(g -> !registeredMapValues.contains(g.getValue())).findFirst();
+                if (freeValue.isPresent()) {
+                    System.out.println(freeValue.get().getValue()+" is not yet chosen - take that");
+                    exchangeValue(sameValueField.get(), freeValue.get());
+                    updateRegisteredMap(index, registeredMap,data);
+                } else {
+                    System.out.println("The first adjacent value "+adjancentValues.get(0).getValue()+" is already registered, switch that with first occurence of "+sameValueField.get().getValue()+" and iteratively backtrace");
+                    exchangeValue(sameValueField.get(), adjancentValues.get(0));
+                    updateRegisteredMap(index, registeredMap,data);
+                    backtraceAdjacentValues(sameValueField.get(), data, index, registeredMap, direction, rowOrColumnNum);
+                }
             }
-
         }
     }
 
