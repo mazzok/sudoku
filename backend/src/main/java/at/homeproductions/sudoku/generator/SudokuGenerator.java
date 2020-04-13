@@ -10,8 +10,18 @@ import java.util.stream.Stream;
 public class SudokuGenerator {
 
     public enum Direction {
-        ROW,
-        COLUMN
+        ROW(0),
+        COLUMN(1);
+
+        private int value;
+
+        Direction(int i) {
+            this.value = i;
+        }
+
+        public int getValue() {
+            return value;
+        }
     }
 
     public static GeneratedSudoku generate() {
@@ -22,15 +32,17 @@ public class SudokuGenerator {
             GeneratedSudokuField[] row = s.getRow(y);
             GeneratedSudokuField[] column = s.getColumn(x);
 
-            markSorted(row);
-            markSorted(column);
+            List<GeneratedSudokuField[]> data = Arrays.asList(row, column);
+//
+//            markSorted(row);
+//            markSorted(column);
 
             System.out.println("Exchange InBlock for ROW "+y);
-            exchangeInBlock(s, row, Direction.ROW,y);
+            exchangeInBlock(s, data, Direction.ROW,y);
             System.out.println(s);
 
             System.out.println("Exchange InBlock for COLUMN "+x);
-            exchangeInBlock(s, column, Direction.COLUMN,x);
+            exchangeInBlock(s, data, Direction.COLUMN,x);
             System.out.println(s);
 
             if (x > 1) {
@@ -57,25 +69,36 @@ public class SudokuGenerator {
         Arrays.stream(row).forEach(f -> f.setSorted(true));
     }
 
-    private static void exchangeInBlock(GeneratedSudoku sudoku, GeneratedSudokuField[] data, Direction direction, int rowOrColumnNum) {
+    private static void exchangeInBlock(GeneratedSudoku sudoku, List<GeneratedSudokuField[]> colRowData, Direction direction, int rowOrColumnNum) {
         Map<Integer, GeneratedSudokuField> registeredMap = new LinkedHashMap<>();
-        List<Integer> dataValues = Arrays.stream(data).map(GeneratedSudokuField::getValue).collect(Collectors.toList());
+
+        List<Integer> dataValues = Arrays.stream(colRowData.get(direction.getValue()))
+                .map(GeneratedSudokuField::getValue).collect(Collectors.toList());
+
+        GeneratedSudokuField[] data = colRowData.get(direction.getValue());
         for (int i = 0; i < data.length;i++) {
             GeneratedSudokuField f = data[i];
-
+            f.setSorted(true);
             if (registeredMap.get(f.getValue()) == null) {
                 registeredMap.put(f.getValue(), f);
                 continue;
             } else {
                 //duplicate case!
+                List<GeneratedSudokuField> freeFields = new ArrayList<>();
                 System.out.println(f.getValue()+" is duplicate!");
-                List<GeneratedSudokuField> freeFields = Arrays.stream(f.getBlock().getFields())
-                        .flatMap(Arrays::stream)
-                        .filter(s -> !s.isSorted())
-                        .filter(s -> !dataValues.contains(s.getValue()))
-                        .filter(s -> registeredMap.get(s.getValue()) == null)
-                        .collect(Collectors.toList());
-                if (!freeFields.isEmpty()) {
+                if (f.isSorted()) {
+                    System.out.println(" and it is already sorted! apply backtracing");
+                } else {
+                     freeFields = Arrays.stream(f.getBlock().getFields())
+                            .flatMap(Arrays::stream)
+                            .filter(s -> sudoku.isNotInColOrRow(s, rowOrColumnNum))
+                            .filter(s -> !s.isSorted())
+                            .filter(s -> !dataValues.contains(s.getValue()))
+                            .filter(s -> registeredMap.get(s.getValue()) == null)
+                            .collect(Collectors.toList());
+                }
+
+                if (freeFields.size() > 0) {
                     GeneratedSudokuField exchangeValueField = freeFields.get(0);
                     System.out.println(String.format("Exchanging duplicate %s with free field value %s in its block", f.getValue(), exchangeValueField.getValue()));
 
@@ -93,6 +116,7 @@ public class SudokuGenerator {
 //            System.out.println(sudoku);
         }
     }
+
 
     private static void updateRegisteredMap(Integer upToIncludeIndex, Map<Integer, GeneratedSudokuField> registeredMap, GeneratedSudokuField[] data) {
         registeredMap.clear();

@@ -245,5 +245,9 @@ public class GeneratedSudoku extends AbstractSudoku<GeneratedSudokuField, Genera
         }
         return returnV;
     }
+
+    public boolean isNotInColOrRow(GeneratedSudokuField s, int rowOrColumnNum) {
+        return !(this.getColIndex(s) == rowOrColumnNum || this.getRowIndex(s) == rowOrColumnNum);
+    }
 }
 
