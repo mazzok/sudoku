@@ -2,6 +2,7 @@ package at.homeproductions.sudoku.generator;
 
 import at.homeproductions.sudoku.entity.generator.GeneratedSudoku;
 import at.homeproductions.sudoku.entity.generator.GeneratedSudokuField;
+import at.homeproductions.sudoku.entity.generator.GeneratedSudokuSnapshot;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,6 +27,9 @@ public class SudokuGenerator {
 
     public static GeneratedSudoku generate() {
         GeneratedSudoku s = new GeneratedSudoku();
+
+        List<GeneratedSudokuSnapshot> generatedSnapshots;
+
         System.out.println(s);
 
         for (int x = 0, y = 0; x < 9 && y < 9; x++,y++) {
@@ -33,40 +37,18 @@ public class SudokuGenerator {
             GeneratedSudokuField[] column = s.getColumn(x);
 
             List<GeneratedSudokuField[]> data = Arrays.asList(row, column);
-//
-//            markSorted(row);
-//            markSorted(column);
-
-            System.out.println("Exchange InBlock for ROW "+y);
+            System.out.println("Processing Row "+y);
             exchangeInBlock(s, data, Direction.ROW,y);
-            System.out.println(s);
+            GeneratedSudokuSnapshot generatedSudokuSnapshot = new GeneratedSudokuSnapshot("Processing Row "+y, s);
 
-            System.out.println("Exchange InBlock for COLUMN "+x);
+            System.out.println("Processing Column "+x);
             exchangeInBlock(s, data, Direction.COLUMN,x);
-            System.out.println(s);
-
-            if (x > 1) {
-                if(!s.checkAllColumnSumUpTo(x) || !s.checkAllColumnUpToNoDuplicates(x)) {
-                    throw new IllegalStateException("The generated sudoku is not valid:"+s.toString());
-                }
-            }
-
-            if (y > 1) {
-                if (!s.checkAllRowSumUpTo(y) || !s.checkAllRowUpToNoDuplicates(y)){
-                    throw new IllegalStateException("The generated sudoku is not valid:"+s.toString());
-                }
-            }
-
         }
 
         if (!s.isValid()) {
             throw new IllegalStateException("The generated sudoku is not valid:"+s.toString());
         }
         return s;
-    }
-
-    private static void markSorted(GeneratedSudokuField[] row) {
-        Arrays.stream(row).forEach(f -> f.setSorted(true));
     }
 
     private static void exchangeInBlock(GeneratedSudoku sudoku, List<GeneratedSudokuField[]> colRowData, Direction direction, int rowOrColumnNum) {
@@ -84,36 +66,35 @@ public class SudokuGenerator {
                 continue;
             } else {
                 //duplicate case!
-                List<GeneratedSudokuField> freeFields = new ArrayList<>();
                 System.out.println(f.getValue()+" is duplicate!");
                 if (f.isSorted()) {
                     System.out.println(" and it is already sorted! apply backtracing");
+                    backtraceAdjacentValues(f, data,i, registeredMap, direction, rowOrColumnNum);
                 } else {
-                     freeFields = Arrays.stream(f.getBlock().getFields())
+                    List<GeneratedSudokuField> freeFields = Arrays.stream(f.getBlock().getFields())
                             .flatMap(Arrays::stream)
                             .filter(s -> sudoku.isNotInColOrRow(s, rowOrColumnNum))
                             .filter(s -> !s.isSorted())
                             .filter(s -> !dataValues.contains(s.getValue()))
                             .filter(s -> registeredMap.get(s.getValue()) == null)
                             .collect(Collectors.toList());
-                }
 
-                if (freeFields.size() > 0) {
-                    GeneratedSudokuField exchangeValueField = freeFields.get(0);
-                    System.out.println(String.format("Exchanging duplicate %s with free field value %s in its block", f.getValue(), exchangeValueField.getValue()));
+                    if (freeFields.size() > 0) {
+                        GeneratedSudokuField exchangeValueField = freeFields.get(0);
+                        System.out.println(String.format("Exchanging duplicate %s with free field value %s in its block", f.getValue(), exchangeValueField.getValue()));
 
-                    exchangeValue(f, exchangeValueField);
-                    updateRegisteredMap(i, registeredMap,data);
-                    System.out.println("############");
-                    System.out.println(sudoku.toString());
-                    System.out.println("############");
-                    continue;
-                } else {
-                    System.out.println("No free fields for duplicate value "+f.getValue()+" trying adjacent elements!");
-                    backtraceAdjacentValues(f, data,i, registeredMap, direction, rowOrColumnNum);
+                        exchangeValue(f, exchangeValueField);
+                        updateRegisteredMap(i, registeredMap,data);
+                        System.out.println("############");
+                        System.out.println(sudoku.toString());
+                        System.out.println("############");
+                        continue;
+                    } else {
+                        System.out.println("No free fields for duplicate value "+f.getValue()+" trying adjacent elements!");
+                        backtraceAdjacentValues(f, data,i, registeredMap, direction, rowOrColumnNum);
+                    }
                 }
             }
-//            System.out.println(sudoku);
         }
     }
 
@@ -195,11 +176,4 @@ public class SudokuGenerator {
         return exchangeInBlockPossible;
     }
 
-//    private static Map<Integer, List<GeneratedSudokuField>> findDuplicates(GeneratedSudokuField[] array) {
-//        return Arrays.stream(array)
-//                .collect(Collectors.groupingBy(GeneratedSudokuField::getValue))
-//                .entrySet().stream()
-//                .filter(e -> e.getValue().size() > 1)
-//                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-//    }
 }

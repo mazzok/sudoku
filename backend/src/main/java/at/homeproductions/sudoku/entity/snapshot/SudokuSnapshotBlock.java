@@ -12,12 +12,12 @@ public class SudokuSnapshotBlock extends AbstractSudokuBlock<SudokuSnapshotField
         super(sudoku,x,y,xDim,yDim);
     }
 
-    public SudokuSnapshotBlock(SudokuSnapshot sudokuSnapshot, SudokuBlock sudokuBlock) {
+    public SudokuSnapshotBlock(SudokuSnapshot sudokuSnapshot, AbstractSudokuBlock sudokuBlock) {
         this.sudoku = sudokuSnapshot;
         copy(sudokuBlock);
     }
 
-    private void copy(SudokuBlock sudokuBlock) {
+    private void copy(AbstractSudokuBlock sudokuBlock) {
         this.xDim = sudokuBlock.getXDim();
         this.yDim = sudokuBlock.getYDim();
         this.x = sudokuBlock.getX();

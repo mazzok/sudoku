@@ -2,7 +2,10 @@ package at.homeproductions.sudoku.entity.generator;
 
 import at.homeproductions.sudoku.entity.AbstractSudoku;
 import at.homeproductions.sudoku.entity.AbstractSudokuBlock;
+import at.homeproductions.sudoku.entity.SudokuField;
+import at.homeproductions.sudoku.entity.snapshot.SudokuSnapshot;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +27,7 @@ public class GeneratedSudoku extends AbstractSudoku<GeneratedSudokuField, Genera
         return new GeneratedSudokuBlock(this,x,y,this.xBlockDim,this.yBlockDim);
     }
 
+
     @Override
     protected Class<GeneratedSudokuField> getFieldClass() {
         return GeneratedSudokuField.class;
@@ -32,22 +36,6 @@ public class GeneratedSudoku extends AbstractSudoku<GeneratedSudokuField, Genera
     @Override
     protected Class<GeneratedSudokuBlock> getBlockClass() {
         return GeneratedSudokuBlock.class;
-    }
-
-
-
-    public GeneratedSudokuField[] getRow(int index, int start) {
-        GeneratedSudokuField[] row = super.getRow(index);
-        return  IntStream.range(start, row.length )
-                .mapToObj(i -> row[i])
-                .toArray(GeneratedSudokuField[]::new);
-    }
-
-    public GeneratedSudokuField[] getColumn(int colNum, int start) {
-        GeneratedSudokuField[] column = super.getColumn(colNum);
-        return IntStream.range(colNum, column.length)
-                .mapToObj(i -> column[i])
-                .toArray(GeneratedSudokuField[]::new);
     }
 
     private void randomize() {
@@ -64,11 +52,6 @@ public class GeneratedSudoku extends AbstractSudoku<GeneratedSudokuField, Genera
                 }
             }
         }
-    }
-
-    @Override
-    protected void init() {
-        super.init();
     }
 
     @Override
@@ -111,49 +94,6 @@ public class GeneratedSudoku extends AbstractSudoku<GeneratedSudokuField, Genera
                 && checkNoDuplicatesBlock(sudokuField);
     }
 
-    public boolean checkAllColumnSumUpTo(int upToColIndex) {
-        for(int i =0 ; i< upToColIndex;i++){
-            boolean checkCol = checkColumnSum(i);
-            if (checkCol == false) {
-                System.out.println(String.format("Col %s has invalid sum!", i));
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean checkAllColumnUpToNoDuplicates(int upToColIndex) {
-        for(int i =0 ; i< upToColIndex;i++){
-            boolean checkCol = checkNoDuplicatesColumn(i);
-            if (checkCol == false) {
-                System.out.println(String.format("Col %s has duplicates!", i));
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean checkAllRowUpToNoDuplicates(int upToRowIndex) {
-        for(int i =0 ; i< upToRowIndex;i++){
-            boolean checkRow = checkNoDuplicatesRow(i);
-            if (checkRow == false) {
-                System.out.println(String.format("Row %s has duplicates!", i));
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean checkAllRowSumUpTo(int upToRowIndex) {
-        for(int i =0 ; i< upToRowIndex;i++){
-            boolean checkCol = checkRowSum(i);
-            if (checkCol == false) {
-                System.out.println(String.format("Row %s has invalid sum!", i));
-                return false;
-            }
-        }
-        return true;
-    }
     private boolean checkNoDuplicatesBlock(GeneratedSudokuField sudokuField) {
         GeneratedSudokuBlock block = sudokuField.getBlock();
         List<Integer> mappedValues = Arrays.stream(block.getFields()).flatMap(Arrays::stream).filter( s -> s.getValue() != null).map(GeneratedSudokuField::getValue).collect(Collectors.toList());
@@ -166,7 +106,7 @@ public class GeneratedSudoku extends AbstractSudoku<GeneratedSudokuField, Genera
         return returnV;
     }
 
-    public boolean checkNoDuplicatesColumn(int colIndex) {
+    private boolean checkNoDuplicatesColumn(int colIndex) {
         GeneratedSudokuField[] column = getColumn(colIndex);
         List<Integer> mappedValues  = Arrays.stream(column).filter( s -> s.getValue() != null).map(GeneratedSudokuField::getValue).collect(Collectors.toList());
         long fullCount = mappedValues.stream().count();
@@ -182,7 +122,7 @@ public class GeneratedSudoku extends AbstractSudoku<GeneratedSudokuField, Genera
         return checkNoDuplicatesColumn(getColIndex(sudokuField));
     }
 
-    public boolean checkNoDuplicatesRow(int rowIndex) {
+    private boolean checkNoDuplicatesRow(int rowIndex) {
         GeneratedSudokuField[] row = getRow(rowIndex);
         List<Integer> mappedValues = Arrays.stream(row).filter( s -> s.getValue() != null).map(GeneratedSudokuField::getValue).collect(Collectors.toList());
         long fullCount= mappedValues.stream().count();
@@ -198,7 +138,7 @@ public class GeneratedSudoku extends AbstractSudoku<GeneratedSudokuField, Genera
         return checkNoDuplicatesRow(getRowIndex(sudokuField));
     }
 
-    public boolean checkColumnSum(int colIndex) {
+    private boolean checkColumnSum(int colIndex) {
         GeneratedSudokuField[] column = getColumn(colIndex);
         int maxSum = IntStream.rangeClosed(DEFAULT_MIN_VALUE,DEFAULT_MAX_VALUE).sum();
         int currentColumnSum = Arrays.stream(column).filter( s -> s.getValue() != null)
@@ -216,7 +156,7 @@ public class GeneratedSudoku extends AbstractSudoku<GeneratedSudokuField, Genera
         return checkColumnSum(getColIndex(sudokuField));
     }
 
-    public boolean checkRowSum(int rowIndex) {
+    private boolean checkRowSum(int rowIndex) {
         GeneratedSudokuField[] row = getRow(rowIndex);
         int maxSum = IntStream.rangeClosed(DEFAULT_MIN_VALUE,DEFAULT_MAX_VALUE).sum();
         int currentRowSum = Arrays.stream(row).filter( s -> s.getValue() != null)

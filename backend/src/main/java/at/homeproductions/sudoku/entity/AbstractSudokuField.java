@@ -72,11 +72,15 @@ public class AbstractSudokuField<B extends AbstractSudokuBlock> {
     }
 
 
-     public void copy(SudokuField sudokuField) {
+     public void copy(AbstractSudokuField sudokuField) {
         this.value = sudokuField.getValue();
         this.x = sudokuField.getX();
         this.y = sudokuField.getY();
-        this.possibleValues = sudokuField.getPossibleValues().stream().map(PossibleValue::copy).collect(Collectors.toList());
+        this.possibleValues = sudokuField.getPossibleValues();
+
+        for (PossibleValue p : this.possibleValues) {
+            PossibleValue copy = PossibleValue.copy(p);
+        }
         this.isValueReserved = sudokuField.getIsValueReserved();
     }
 

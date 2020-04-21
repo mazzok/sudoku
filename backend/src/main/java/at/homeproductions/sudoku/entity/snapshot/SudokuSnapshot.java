@@ -1,9 +1,6 @@
 package at.homeproductions.sudoku.entity.snapshot;
 
-import at.homeproductions.sudoku.entity.AbstractSudoku;
-import at.homeproductions.sudoku.entity.Sudoku;
-import at.homeproductions.sudoku.entity.SudokuBlock;
-import at.homeproductions.sudoku.entity.SudokuField;
+import at.homeproductions.sudoku.entity.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +12,7 @@ public class SudokuSnapshot extends AbstractSudoku<SudokuSnapshotField, SudokuSn
     public SudokuSnapshot(){
         super();
     }
-    public SudokuSnapshot(String message, List<SudokuField> actors, List<SudokuField> reactors, Sudoku sudoku) {
+    public SudokuSnapshot(String message, List<? extends AbstractSudokuField> actors, List<? extends AbstractSudokuField> reactors, AbstractSudoku sudoku) {
         for(int y = 0; y < this.blocks.length;y++ ) {
             for(int x = 0; x < this.blocks[0].length;x++) {
                 this.blocks[y][x] = new SudokuSnapshotBlock(this,sudoku.getBlocks()[y][x]);
@@ -27,7 +24,7 @@ public class SudokuSnapshot extends AbstractSudoku<SudokuSnapshotField, SudokuSn
         this.message = message;
     }
 
-    private List<SudokuSnapshotField> matchFieldsByCoords(List<SudokuField> reference) {
+    private List<SudokuSnapshotField> matchFieldsByCoords(List<? extends AbstractSudokuField> reference) {
         return Arrays.stream(this.blocks)
                 .flatMap(Arrays::stream)
                 .map(SudokuSnapshotBlock::getFields)

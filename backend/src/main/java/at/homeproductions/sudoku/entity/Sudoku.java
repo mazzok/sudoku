@@ -337,7 +337,7 @@ public class Sudoku extends AbstractSudoku<SudokuField, SudokuBlock, Sudoku>{
     }
 
     public void logSolutionTrailStep(String message, List<SudokuField> actors, List<SudokuField> reactors) {
-        SudokuSnapshot snapshot = new SudokuSnapshot(message,actors, reactors, this);
+        SudokuSnapshot snapshot = new SudokuSnapshot(message, actors, reactors, this);
 
         this.snapshots.add(snapshot);
     }

@@ -24,7 +24,7 @@ public class SudokuSnapshotField extends AbstractSudokuField<SudokuSnapshotBlock
         super(sudokuTrailBlock,fieldY,fieldX);
     }
 
-    public SudokuSnapshotField(SudokuSnapshotBlock block, SudokuField sudokuField) {
+    public SudokuSnapshotField(SudokuSnapshotBlock block, AbstractSudokuField sudokuField) {
         this.block = block;
         copy(sudokuField);
     }
