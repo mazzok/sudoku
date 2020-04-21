@@ -8,6 +8,7 @@ public class GeneratedSudokuSnapshotField extends AbstractSudokuField<GeneratedS
     private boolean isInRowSelection;
     private boolean isInBlockSelection;
     private boolean isCurrentlyInSelection;
+    private boolean isSorted;
 
     private boolean isFreeField;
     private boolean isAdjacent;
@@ -101,5 +102,13 @@ public class GeneratedSudokuSnapshotField extends AbstractSudokuField<GeneratedS
 
     public void setDuplicate(boolean duplicate) {
         isDuplicate = duplicate;
+    }
+
+    public boolean isSorted() {
+        return isSorted;
+    }
+
+    public void setSorted(boolean sorted) {
+        isSorted = sorted;
     }
 }

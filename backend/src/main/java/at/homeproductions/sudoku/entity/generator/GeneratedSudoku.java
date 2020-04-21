@@ -2,8 +2,6 @@ package at.homeproductions.sudoku.entity.generator;
 
 import at.homeproductions.sudoku.entity.AbstractSudoku;
 import at.homeproductions.sudoku.entity.AbstractSudokuBlock;
-import at.homeproductions.sudoku.entity.SudokuField;
-import at.homeproductions.sudoku.entity.snapshot.SudokuSnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +14,8 @@ import static at.homeproductions.sudoku.entity.SudokuField.DEFAULT_MAX_VALUE;
 import static at.homeproductions.sudoku.entity.SudokuField.DEFAULT_MIN_VALUE;
 
 public class GeneratedSudoku extends AbstractSudoku<GeneratedSudokuField, GeneratedSudokuBlock, GeneratedSudoku> {
+
+    List<GeneratedSudokuSnapshot> generatedSudokuSnapshots = new ArrayList<>();
 
     public GeneratedSudoku() {
         super();
@@ -188,6 +188,14 @@ public class GeneratedSudoku extends AbstractSudoku<GeneratedSudokuField, Genera
 
     public boolean isNotInColOrRow(GeneratedSudokuField s, int rowOrColumnNum) {
         return !(this.getColIndex(s) == rowOrColumnNum || this.getRowIndex(s) == rowOrColumnNum);
+    }
+
+    public void addSnaptshot(GeneratedSudokuSnapshot generatedSudokuSnapshot) {
+        this.generatedSudokuSnapshots.add(generatedSudokuSnapshot);
+    }
+
+    public GeneratedSudokuSnapshot getCurrentSnapshot() {
+        return this.generatedSudokuSnapshots.get(this.generatedSudokuSnapshots.size()-1);
     }
 }
 

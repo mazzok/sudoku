@@ -5,6 +5,7 @@ import at.homeproductions.sudoku.entity.AbstractSudokuField;
 import at.homeproductions.sudoku.entity.snapshot.SudokuSnapshotBlock;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +53,11 @@ public class GeneratedSudokuSnapshot extends AbstractSudoku<GeneratedSudokuSnaps
     }
 
 
+    public void setSortedFields(List<GeneratedSudokuField> fieldList) {
+        matchFieldsByCoords(fieldList).forEach(s -> s.setSorted(true));
+    }
+
+
 
     private List<GeneratedSudokuSnapshotField> matchFieldsByCoords(List<? extends AbstractSudokuField> reference) {
         return Arrays.stream(this.blocks)
@@ -63,6 +69,10 @@ public class GeneratedSudokuSnapshot extends AbstractSudoku<GeneratedSudokuSnaps
                     return reference.stream().anyMatch(ss -> ss.equalsCoordinates(s.getBlock().getY(), s.getBlock().getX(), s.getY(), s.getX()));
                 })
                 .collect(Collectors.toList());
+    }
+
+    public void appendMessage(String message) {
+        this.message += message;
     }
 
     public String getMessage() {
@@ -87,6 +97,5 @@ public class GeneratedSudokuSnapshot extends AbstractSudoku<GeneratedSudokuSnaps
     protected GeneratedSudokuSnapshotBlock createSudokuBlock(int y, int x) {
         return new GeneratedSudokuSnapshotBlock(this,x,y,this.xBlockDim,this.yBlockDim);
     }
-
 
 }
