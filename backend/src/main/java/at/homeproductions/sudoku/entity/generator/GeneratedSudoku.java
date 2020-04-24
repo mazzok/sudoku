@@ -197,5 +197,13 @@ public class GeneratedSudoku extends AbstractSudoku<GeneratedSudokuField, Genera
     public GeneratedSudokuSnapshot getCurrentSnapshot() {
         return this.generatedSudokuSnapshots.get(this.generatedSudokuSnapshots.size()-1);
     }
+
+    public List<GeneratedSudokuSnapshot> getGeneratedSudokuSnapshots() {
+        return generatedSudokuSnapshots;
+    }
+
+    public void setGeneratedSudokuSnapshots(List<GeneratedSudokuSnapshot> generatedSudokuSnapshots) {
+        this.generatedSudokuSnapshots = generatedSudokuSnapshots;
+    }
 }
 

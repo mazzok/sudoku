@@ -2,7 +2,7 @@ package at.homeproductions.sudoku.boundary;
 
 
 import at.homeproductions.sudoku.converter.SudokuConverter;
-import at.homeproductions.sudoku.converter.SudokuSnapshotConverter;
+import at.homeproductions.sudoku.converter.snapshot.SudokuSnapshotConverter;
 import at.homeproductions.sudoku.entity.FieldVincinityCalculator;
 import at.homeproductions.sudoku.entity.Sudoku;
 import at.homeproductions.sudoku.entity.SudokuField;

@@ -1,7 +1,7 @@
 package at.homeproductions.sudoku.converter;
 
+import at.homeproductions.sudoku.converter.snapshot.SudokuSnapshotConverter;
 import at.homeproductions.sudoku.entity.Sudoku;
-import at.homeproductions.sudoku.model.SudokuBlockModel;
 import at.homeproductions.sudoku.model.SudokuModel;
 
 import java.util.Arrays;

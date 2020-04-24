@@ -1,4 +1,6 @@
-package at.homeproductions.sudoku.model;
+package at.homeproductions.sudoku.model.snapshot;
+
+import at.homeproductions.sudoku.model.PossibleValueModel;
 
 import java.util.List;
 

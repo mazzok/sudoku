@@ -1,4 +1,4 @@
-package at.homeproductions.sudoku.model;
+package at.homeproductions.sudoku.model.snapshot;
 
 import java.util.List;
 

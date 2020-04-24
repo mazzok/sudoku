@@ -1,7 +1,9 @@
-package at.homeproductions.sudoku.converter;
+package at.homeproductions.sudoku.converter.snapshot;
 
+import at.homeproductions.sudoku.converter.AbstractConverter;
+import at.homeproductions.sudoku.converter.PossibleValueConverter;
 import at.homeproductions.sudoku.entity.snapshot.SudokuSnapshotField;
-import at.homeproductions.sudoku.model.SudokuSnapshotFieldModel;
+import at.homeproductions.sudoku.model.snapshot.SudokuSnapshotFieldModel;
 
 public class SudokuSnapshotFieldConverter extends AbstractConverter<SudokuSnapshotFieldModel, SudokuSnapshotField> {
 

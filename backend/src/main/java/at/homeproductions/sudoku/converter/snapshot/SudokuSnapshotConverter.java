@@ -1,14 +1,13 @@
-package at.homeproductions.sudoku.converter;
+package at.homeproductions.sudoku.converter.snapshot;
 
-import at.homeproductions.sudoku.entity.Sudoku;
+import at.homeproductions.sudoku.converter.AbstractConverter;
 import at.homeproductions.sudoku.entity.snapshot.SudokuSnapshot;
-import at.homeproductions.sudoku.model.SudokuModel;
-import at.homeproductions.sudoku.model.SudokuSnapshotModel;
+import at.homeproductions.sudoku.model.snapshot.SudokuSnapshotModel;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class SudokuSnapshotConverter extends AbstractConverter<SudokuSnapshotModel, SudokuSnapshot>{
+public class SudokuSnapshotConverter extends AbstractConverter<SudokuSnapshotModel, SudokuSnapshot> {
 
     @Override
     public SudokuSnapshotModel toModel(SudokuSnapshot entity) {

@@ -1,9 +1,8 @@
-package at.homeproductions.sudoku.converter;
+package at.homeproductions.sudoku.converter.snapshot;
 
-import at.homeproductions.sudoku.entity.SudokuBlock;
+import at.homeproductions.sudoku.converter.AbstractConverter;
 import at.homeproductions.sudoku.entity.snapshot.SudokuSnapshotBlock;
-import at.homeproductions.sudoku.model.SudokuBlockModel;
-import at.homeproductions.sudoku.model.SudokuSnapshotBlockModel;
+import at.homeproductions.sudoku.model.snapshot.SudokuSnapshotBlockModel;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

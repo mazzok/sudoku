@@ -1,6 +1,6 @@
 package at.homeproductions.sudoku.model;
 
-import at.homeproductions.sudoku.entity.snapshot.SudokuSnapshot;
+import at.homeproductions.sudoku.model.snapshot.SudokuSnapshotModel;
 
 import java.util.List;
 

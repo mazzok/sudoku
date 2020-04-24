@@ -12,23 +12,28 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { PossibleValuesComponent } from "./field/possiblevalues/possiblevalues/possiblevalues.component";
 import { GridHintComponent } from "./grid-hint/grid-hint.component";
 import { HelpMeService } from "./services/sudokuhelpme.service";
+import { GridGeneratedSnapshotComponent } from "./generated/grid-generated-snapshot.component";
+import { SudokugridComponent } from "./sudokugrid.component";
+import { MainContentComponent } from "../main-content/main-content.component";
 
 @NgModule({
   declarations: [
+    SudokugridComponent,
     GridComponent,
     GridHintComponent,
+    GridGeneratedSnapshotComponent,
+    MainContentComponent,
     BlockComponent,
     FieldComponent,
-    PossibleValuesComponent
+    PossibleValuesComponent,
   ],
   imports: [
-    CommonModule,
     SudokugridRoutingModule,
-    BsDropdownModule.forRoot(),
-    ButtonsModule.forRoot(),
-    BrowserAnimationsModule
+    CommonModule,
+    BsDropdownModule,
+    ButtonsModule,
+    // BrowserAnimationsModule,
   ],
-  exports: [GridComponent, GridHintComponent],
-  providers: [SudokuService, HelpMeService]
+  providers: [SudokuService, HelpMeService],
 })
 export class SudokugridModule {}
