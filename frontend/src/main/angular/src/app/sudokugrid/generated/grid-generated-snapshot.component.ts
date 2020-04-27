@@ -4,7 +4,8 @@ import { Subscription } from "rxjs";
 import { SudokuModel } from "../models/sudokumodel";
 import { SudokusnapshotModel } from "../models/sudokusnapshotmodel";
 import { SudokuService } from "../services/sudoku.service";
-import {GeneratedSudokusnapshotModel} from "../models/generatedsudokusnapshotmodel";
+import {GeneratedSudokuSnapshotModel} from "../models/generatedsudokusnapshotmodel";
+import { SudokuCacheService } from '../services/sudokucache.service';
 
 @Component({
   selector: "grid-generated-snapshot",
@@ -13,18 +14,25 @@ import {GeneratedSudokusnapshotModel} from "../models/generatedsudokusnapshotmod
 })
 export class GridGeneratedSnapshotComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
-  sudokuSnapshots: GeneratedSudokusnapshotModel[];
+  sudokuSnapshots: GeneratedSudokuSnapshotModel[];
   constructor(
-    private helpMeService: HelpMeService,
-    private sudokuService: SudokuService
+    private sudokuCacheService: SudokuCacheService
   ) {}
 
+  sudoku: SudokuModel;
   ngOnInit() {
-
+    this.subscription.add(
+      this.sudokuCacheService.sudoku.subscribe(response => {
+        if (response !== null) {
+          console.log("load sudoku:" + JSON.stringify(response));
+          this.sudoku = response;
+        }
+      })
+    );
   }
-
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
+
 }

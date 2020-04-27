@@ -1,6 +1,6 @@
 import {GeneratedSudokuSnapshotBlockModel} from "./generatedsudokusnapshotblockmodel";
 
-export interface GeneratedSudokusnapshotModel {
+export interface GeneratedSudokuSnapshotModel {
     message: string;
     xDim: number;
     yDim: number;

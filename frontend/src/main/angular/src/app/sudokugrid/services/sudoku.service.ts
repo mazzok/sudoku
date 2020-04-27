@@ -6,20 +6,29 @@ import { SudokuModel } from "../models/sudokumodel";
 import { SudokuFieldModel } from "../models/sudokufieldmodel";
 import { JsonPipe } from "@angular/common";
 import { SudokusnapshotModel } from "../models/sudokusnapshotmodel";
+import { GeneratedSudokuModel } from '../models/generatedsudokumodel';
 
 @Injectable({
   providedIn: "root"
 }
 )
 export class SudokuService {
+  
   constructor(private http: HttpClient) {}
 
   url = "sudoku";
+  generatedUrl = "generatedsudoku/generate";
 
   public getSudoku(): Observable<SudokuModel> {
     const path = this.url;
     console.log("getting Sudoku from " + path);
     return this.http.get<SudokuModel>(path);
+  }
+
+  getGeneratedSudoku():Observable<GeneratedSudokuModel> {
+    const path = this.generatedUrl;
+    console.log("getting generatedSudoku from " + path);
+    return this.http.get<GeneratedSudokuModel>(path);
   }
 
   public nextStepForSudoku(
@@ -66,4 +75,6 @@ export class SudokuService {
       })
     );
   }
+
+  
 }
