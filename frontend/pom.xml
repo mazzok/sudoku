@@ -14,8 +14,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>14</maven.compiler.source>
+    <maven.compiler.target>14</maven.compiler.target>
 
 <!--    <skipKarmaTests>${maven.test.skip}</skipKarmaTests>-->
     <skipProtractorTests>true</skipProtractorTests>
@@ -95,35 +95,30 @@
             <version>${version.frontend-maven-plugin}</version>
             <configuration>
               <workingDirectory>${src.dir.angular}</workingDirectory>
-              <installDirectory>${project.parent.build.directory1}</installDirectory>
-              <nodeVersion>v4.6.0</nodeVersion>
+<!--              <installDirectory>${project.parent.build.directory1}</installDirectory>-->
+              <nodeVersion>v12.16.2</nodeVersion>
               <!-- optional: with node version greater than 4.0.0 will use npm provided by node distribution -->
-              <npmVersion>2.15.9</npmVersion>
+              <npmVersion>6.14.4</npmVersion>
               <!-- optional: where to download node and npm from. Defaults to https://nodejs.org/dist/ -->
-              <downloadRoot>http://nodejs.org/dist</downloadRoot>
+              <nodeDownloadRoot>http://nodejs.org/dist/</nodeDownloadRoot>
+              <npmDownloadRoot>http://registry.npmjs.org/npm/-/</npmDownloadRoot>
             </configuration>
 
             <executions>
-<!--              <execution>-->
-<!--                &lt;!&ndash; optional: you don't really need execution ids, but it looks nice in your build log. &ndash;&gt;-->
-<!--                <id>install node and npm</id>-->
-<!--                <goals>-->
-<!--                  <goal>install-node-and-npm</goal>-->
-<!--                </goals>-->
-<!--                &lt;!&ndash; optional: default phase is "generate-resources" &ndash;&gt;-->
+              <execution>
+                <!-- optional: you don't really need execution ids, but it looks nice in your build log. -->
+                <id>install node and npm</id>
+                <goals>
+                  <goal>install-node-and-npm</goal>
+                </goals>
+                <!-- optional: default phase is "generate-resources" -->
 <!--                <phase>generate-resources</phase>-->
-<!--              </execution>-->
-              <!-- execute command "npm install" inside workingDirectory -->
+              </execution>
               <execution>
                 <id>npm install</id>
                 <goals>
                   <goal>npm</goal>
                 </goals>
-                <configuration>
-                  <workingDirectory>${src.dir.angular}</workingDirectory>
-                  <installDirectory>${project.parent.build.directory1}</installDirectory>
-                  <arguments>install</arguments>
-                </configuration>
               </execution>
 <!--              <execution>-->
 <!--                <id>karma tests</id>-->
@@ -151,12 +146,12 @@
 <!--              </execution>-->
               <!-- execute command "npm build" inside workingDirectory to clean and create "/dist" directory -->
               <execution>
-                <id>npm build</id>
+                <id>npm run build</id>
                 <goals>
                   <goal>npm</goal>
                 </goals>
                 <configuration>
-                  <installDirectory>${project.parent.build.directory1}</installDirectory>
+<!--                  <installDirectory>${project.parent.build.directory1}</installDirectory>-->
                   <arguments>run build</arguments>
                 </configuration>
               </execution>

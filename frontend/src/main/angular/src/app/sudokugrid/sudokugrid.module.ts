@@ -8,13 +8,13 @@ import { BlockComponent } from "./block/block.component";
 import { FieldComponent } from "./field/field.component";
 import { BsDropdownModule } from "ngx-bootstrap/dropdown";
 import { ButtonsModule } from "ngx-bootstrap/buttons";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { PossibleValuesComponent } from "./field/possiblevalues/possiblevalues/possiblevalues.component";
 import { GridHintComponent } from "./grid-hint/grid-hint.component";
 import { HelpMeService } from "./services/sudokuhelpme.service";
 import { GridGeneratedSnapshotComponent } from "./generated/grid-generated-snapshot.component";
 import { SudokugridComponent } from "./sudokugrid.component";
-import { MainContentComponent } from "../main-content/main-content.component";
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { MainContentComponent } from './main-content/main-content.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +26,7 @@ import { MainContentComponent } from "../main-content/main-content.component";
     BlockComponent,
     FieldComponent,
     PossibleValuesComponent,
+    SidebarComponent
   ],
   imports: [
     SudokugridRoutingModule,

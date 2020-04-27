@@ -35,7 +35,7 @@ public class main {
 //        s.solve();
         GeneratedSudoku s = SudokuGenerator.generate();
         System.out.println(s);
-
+//
 //
 //        new Thread(new Runnable() {
 //            @Override

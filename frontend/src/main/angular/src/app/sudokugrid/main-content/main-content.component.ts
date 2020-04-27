@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { HelpMeService } from "../sudokugrid/services/sudokuhelpme.service";
-import { SudokuService } from "../sudokugrid/services/sudoku.service";
-import { SudokuCacheService } from "../sudokugrid/services/sudokucache.service";
-import { Subscription } from "rxjs";
-import { SudokuModel } from "../sudokugrid/models/sudokumodel";
+import { HelpMeService } from '../services/sudokuhelpme.service';
+import { SudokuCacheService } from '../services/sudokucache.service';
+import { Subscription } from 'rxjs';
+import { SudokuModel } from '../models/sudokumodel';
 
 @Component({
   selector: "app-main-content",

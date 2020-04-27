@@ -7,7 +7,10 @@ import { SudokuFieldModel } from "../models/sudokufieldmodel";
 import { JsonPipe } from "@angular/common";
 import { SudokusnapshotModel } from "../models/sudokusnapshotmodel";
 
-@Injectable()
+@Injectable({
+  providedIn: "root"
+}
+)
 export class SudokuService {
   constructor(private http: HttpClient) {}
 

@@ -1,0 +1,29 @@
+<div class="wrapper">
+     <div class="sidebar" data-background-color="white" data-active-color="danger">
+         <sidebar-cmp></sidebar-cmp>
+  </div>
+  
+     <div class="main-panel">
+      <ng-container *ngIf="sudoku">
+        <div class="grid">
+          <grid [sudoku]="sudoku"></grid>
+          <grid-hint></grid-hint>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="helpMeClicked()">
+          Help me!
+        </button>
+        <!-- <pre>{{ sudoku | json }}</pre> -->
+        <!-- <div class="grid">
+          <ng-container *ngIf="sudoku.snapshots && sudoku.snapshots.length > 0">
+            <ul *ngFor="let s of sudoku.snapshots; index as i">
+              <ng-container *ngIf="i < 10">
+                <grid [sudokusnapshot]="sudoku.snapshots[i]"></grid>
+                {{ sudoku.snapshots[i].message }}
+              </ng-container>
+            </ul>
+          </ng-container>
+        </div> -->
+      </ng-container>
+      
+     </div>
+  </div>
